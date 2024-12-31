@@ -115,8 +115,8 @@ const Homepage = () => {
               <div className="col-md-4" key={index}>
                 <div className="card h-100 shadow-sm">
                   <div className="card-body text-center p-4">
-                    <h3 className="card-title h4">{item.title}</h3>
-                    <p className="card-text text-muted">{item.description}</p>
+                    <h3 className="card-title h4">{item.Title}</h3>
+                    <p className="card-text text-muted">{item.Description}</p>
                   </div>
                 </div>
               </div>
@@ -134,9 +134,10 @@ const Homepage = () => {
         className="position-fixed bottom-0 end-0 p-3"
         style={{ zIndex: "1050" }}
       >
-        <button className="btn btn-primary btn-lg">
+        <a href="/parentlogin" className="btn btn-primary btn-lg">
+
           <i className="bi bi-person-check me-2"></i> Parent Login
-        </button>
+        </a>
       </div>
     </div>
   );
