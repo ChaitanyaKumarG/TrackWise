@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import postMarksService from "../../Services/Faculty/postingMarksServices";
+
 
 function StudentData() {
   const [classes, setClasses] = useState([]);
@@ -11,7 +13,7 @@ function StudentData() {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:1321/class");
+        const response = await postMarksService.getClasses();
         setClasses(response.data);
       } catch (err) {
         console.error("Failed to fetch classes.");
@@ -22,9 +24,7 @@ function StudentData() {
 
   const fetchStudents = async (classId) => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:1321/student/class/${classId}`
-      );
+      const response = await postMarksService.getStudentsByClass(classId)
       setStudents(response.data);
     } catch (err) {
       console.error("Failed to fetch students.");

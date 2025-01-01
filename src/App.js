@@ -1,10 +1,9 @@
 import React from "react";
-import "./App.css";
+import "./Assets/StyleSheets/App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/Parent/LoginPage";
 import StudentMarks from "./Pages/Parent/StudentMarks";
-import StudentDetails from "./Pages/Parent/StudentDetailsPage";
 import FLoginPage from "./Pages/Faculty/LoginPage";
 import PostMarks from "./Pages/Faculty/PostMarks";
 import ReleaseMarks from "./Pages/Admin/ReleaseMarks";
@@ -17,20 +16,25 @@ import CreateData from "./Pages/Admin/CreateDataPage";
 import CreateStudent from "./Pages/Admin/CreateStudent";
 import CreateFaculty from "./Pages/Admin/CreateFaculty";
 import PostNews from "./Pages/Admin/PostNews";
+import StudentProfile from "./Pages/Parent/StudentProfile";
+import Taskbar from "./Components/Common/Navbar";
 
 function App() {
   return (
     <div>
       <BrowserRouter>
+      <Taskbar/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           //Parent Routes
           <Route path="/parentlogin" element={<LoginPage />} />
-          <Route path="/studentprofile/:penNo" element={<StudentDetails />} />
+          <Route path="/studentprofile/:penNo" element={<StudentProfile/>} />
           <Route path="/studentmarks/:StudentID" element={<StudentMarks />} />
+
           //Faculty Routes
           <Route path="/facultylogin" element={<FLoginPage />} />
           <Route path="/postmarks" element={<PostMarks />} />
+          
           //Admin Routes
           <Route path="/adminlogin" element={<ALoginPage />} />
           <Route path="/adminhomepage" element={<AHomePage />} />

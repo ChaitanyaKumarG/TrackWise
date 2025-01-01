@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { fetchAllFaculty } from "../../Services/Faculty/facultyService";
 
 function FLoginPage() {
   const [penNo, setPenNo] = useState("");
@@ -10,11 +10,18 @@ function FLoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all students
-    axios
-      .get("http://127.0.0.1:1321/faculty")
-      .then((response) => setFaculty(response.data))
-      .catch((err) => console.error("Error fetching students:", err));
+
+    const fetchFaculty = async () =>{
+    try {
+          const data = await fetchAllFaculty();
+          setFaculty(data);
+          console.log(data);
+          
+    } catch (err) {
+          setError("Failed to fetch details")
+    };
+  }
+   fetchFaculty();
   }, []);
 
   const handleLogin = (e) => {

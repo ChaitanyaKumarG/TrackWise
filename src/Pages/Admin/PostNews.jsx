@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import newsService from "../../Services/Admin/newsService";
 
 function PostNews() {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ function PostNews() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:1321/news", formData);
+      await newsService.postNews(formData);
       setSuccess("News posted successfully!");
       setError("");
       setFormData({

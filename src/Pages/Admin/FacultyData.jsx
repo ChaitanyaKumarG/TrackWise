@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { fetchAllFaculty } from "../../Services/Faculty/facultyService";
+
 
 function FacultyData() {
   const [faculty, setFaculty] = useState([]);
@@ -9,8 +11,8 @@ function FacultyData() {
   useEffect(() => {
     const fetchFaculty = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:1321/faculty");
-        setFaculty(response.data);
+        const response = await fetchAllFaculty();
+        setFaculty(response);
       } catch (err) {
         setError("Failed to fetch faculty data.");
       } finally {

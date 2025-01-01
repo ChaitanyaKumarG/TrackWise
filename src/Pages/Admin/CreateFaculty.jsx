@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { createFaculty } from "../../Services/Faculty/facultyService";
 
 function CreateFaculty() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ function CreateFaculty() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:1321/faculty", formData);
+      await createFaculty(formData);
       setSuccess("Faculty created successfully!");
       setFormData({
         Name: "",

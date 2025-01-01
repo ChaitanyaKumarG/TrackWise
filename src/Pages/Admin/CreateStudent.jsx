@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { createStudent } from "../../Services/Parent/studentService";
+
 
 function CreateStudent() {
   const [formData, setFormData] = useState({
@@ -27,7 +29,7 @@ function CreateStudent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:1321/student", formData);
+      await createStudent(formData);
       setSuccess("Student created successfully!");
       setFormData({
         StudentName: "",
