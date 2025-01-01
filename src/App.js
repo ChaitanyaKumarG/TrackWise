@@ -25,7 +25,7 @@ function App() {
       <BrowserRouter>
       <Taskbar/>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage/>} />
           //Parent Routes
           <Route path="/parentlogin" element={<LoginPage />} />
           <Route path="/studentprofile/:penNo" element={<StudentProfile/>} />
