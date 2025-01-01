@@ -10,24 +10,31 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     },
     {
       "src": "splashscreen.png",
       "type": "image/png",
-      "sizes": "2048x2732"
+      "sizes": "2048x2732",
+      "purpose": "splash"
     }
   ],
   "start_url": ".",
-  "display": "standalone",
+  "display": "fullscreen",
+  "orientation": "portrait",
   "theme_color": "#1E90FF",
-  "background_color": "#ffffff"
+  "background_color": "#1E90FF",
+  "splash_screen": {
+    "image": "splashscreen.png",
+    "background_color": "#1E90FF",
+    "resize_mode": "contain",
+    "show_duration": 2000
+  }
 }
-
-
-
