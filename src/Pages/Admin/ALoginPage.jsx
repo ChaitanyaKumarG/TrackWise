@@ -47,7 +47,7 @@ function ALoginPage() {
           <form onSubmit={handleLogin}>
             <div className="mb-3">
               <label htmlFor="penNo" className="form-label">
-                Pen Number
+                Admin Key
               </label>
               <input
                 type="text"
@@ -60,7 +60,7 @@ function ALoginPage() {
             </div>
             <div className="mb-3">
               <label htmlFor="parentNo" className="form-label">
-                Parent Phone Number
+                Password
               </label>
               <input
                 type="text"
