@@ -43,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center bg-light" style={{height:"80vh"}}>
+    <div className="d-flex align-items-center justify-content-center bg-light" style={{height:"100vh"}}>
       <div className="container px-4">
         <div className="card border-0 shadow-sm">
           <div className="card-body p-4">

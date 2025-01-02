@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from "react";
 import postMarksService from "../../Services/Faculty/postingMarksServices";
 
+const SuccessModal = ({ show, onClose }) => {
+  if (!show) return null;
+
+  return (
+    <div className="modal d-block" tabIndex="-1" role="dialog">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-body text-center p-5">
+            <div className="mb-4">
+              <i
+                className="bi bi-check-circle-fill text-success"
+                style={{ fontSize: "4rem" }}
+              ></i>
+            </div>
+            <h4 className="mb-3">Marks Submitted Successfully!</h4>
+            <button className="btn btn-primary btn-lg w-100" onClick={onClose}>
+              <i className="bi bi-box-arrow-right me-2"></i>
+              Exit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PostMarks = () => {
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -9,6 +35,7 @@ const PostMarks = () => {
   const [marks, setMarks] = useState([]);
   const [showStudents, setShowStudents] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     selectedClass: "",
@@ -123,20 +150,25 @@ const PostMarks = () => {
     try {
       setLoading(true);
       await postMarksService.submitMarks(data);
-      alert("Marks submitted successfully");
-      setShowStudents(false);
-      setFormData({
-        selectedClass: "",
-        selectedSubject: "",
-        selectedTestType: "",
-        selectedDate: "",
-      });
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error submitting marks:", error);
       alert("Error submitting marks");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleModalClose = () => {
+    setShowSuccessModal(false);
+    setShowStudents(false);
+    setFormData({
+      selectedClass: "",
+      selectedSubject: "",
+      selectedTestType: "",
+      selectedDate: "",
+    });
+    window.location.reload();
   };
 
   if (loading) {
@@ -365,9 +397,16 @@ const PostMarks = () => {
           </div>
         </div>
       )}
+      <SuccessModal show={showSuccessModal} onClose={handleModalClose} />
     </div>
+
+    
   );
+
+  
 };
+
+
 
 export default PostMarks;
 // import React, { useState, useEffect } from "react";

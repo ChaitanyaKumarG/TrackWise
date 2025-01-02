@@ -47,7 +47,7 @@ const ALoginPage = () => {
   return (
     <div
       className="d-flex align-items-center justify-content-center bg-light"
-      style={{ height: "80vh" }}
+      style={{ height: "100vh" }}
     >
       <div className="container px-4">
         <div className="card border-0 shadow-sm">

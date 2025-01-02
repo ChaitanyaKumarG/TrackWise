@@ -130,13 +130,13 @@ const StudentMarks = () => {
   return (
     <div className="container-fluid px-0">
       {/* Header */}
-      <div className=" start-0 w-100 bg-dark text-white p-3" 
+      {/* <div className=" start-0 w-100 bg-dark text-white p-3" 
            style={{ zIndex: 1030 }}>
         <h5 className="mb-0 text-start">
           <i className="bi bi-card-checklist me-2"></i>
           Marks Report
         </h5>
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <div className="mt-3 " >

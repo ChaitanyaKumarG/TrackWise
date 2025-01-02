@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchStudentDetails } from "../../Services/Parent/studentService";
+import studentimg from "../../Assets/Images/student.png"
+
 
 const StudentProfile = () => {
   const { penNo } = useParams();
@@ -42,7 +44,7 @@ const StudentProfile = () => {
   return (
     <div className="min-vh-100 bg-light">
       {/* Header */}
-      <div
+      {/* <div
         className="start-0 w-100 bg-dark text-white "
         style={{ zIndex: 1030 }}
       >
@@ -55,7 +57,7 @@ const StudentProfile = () => {
           </button>
           <h6 className="mb-0">Student Profile</h6>
         </div>
-      </div>
+      </div> */}
 
       {/* Content with padding for fixed header */}
       <div className="pb-5">
@@ -63,7 +65,8 @@ const StudentProfile = () => {
         <div className="text-center p-4 bg-primary bg-opacity-10">
           <div className="position-relative d-inline-block mb-3">
             <img
-              src={student.ImageURL || "/default-avatar.png"}
+              // src={student.Photo || "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid"}
+              src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid"
               alt={student.StudentName}
               className="rounded-circle border border-4 border-white shadow-sm"
               style={{ width: "120px", height: "120px", objectFit: "cover" }}

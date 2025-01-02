@@ -1,139 +1,103 @@
-import React, { useState } from "react";
-import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
-
+import React, { useState, useEffect } from "react";
+import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom";
 
 const TaskBar = () => {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
-  const handleMouseEnter = () => setShowDropdown(true);
-  const handleMouseLeave = () => setShowDropdown(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <Navbar bg="light" expand="lg" className="py-2 shadow-sm">
-      <Container>
-        {/* Desktop View */}
-        <div className="d-none d-lg-flex justify-content-between align-items-center w-100">
-          <div className="w-25" href="/">
+    <Navbar
+      sticky="top"
+      bg="white"
+      className="transition-all duration-300 navbar-light"
+      style={{
+        padding: scrolled ? "0.5rem 0" : "0.75rem 0",
+        boxShadow: scrolled ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+        top: 0,
+        marginTop: 0,
+      }}
+    >
+      <Container fluid className="px-3">
+        <div className="d-flex align-items-center justify-content-between w-100">
+          <Link to="/" className="navbar-brand d-flex align-items-center">
             <img
-              src="logo.png"
-              width="100"
-              height="60px"
-              alt="Logo"
-              title="Logo"
-              className="img-fluid"
-              style={{ height: "100%", maxHeight: "50px", width: "auto" }}
+              src="/logo.png"
+              alt="TrackWise"
+              style={{
+                height: scrolled ? "35px" : "40px",
+                width: "auto",
+                transition: "height 0.3s ease",
+              }}
             />
-          </div>
+          </Link>
 
-          <div className="w-25  justify-content-center ">
-            <h1 className="mb-0 fs-4 text-primary">TrackWise</h1>
-          </div>
-
-          <Nav className="align-items-center justify-content-end w-25 ">
-            <NavDropdown
-              title="Login"
-              align="end"
-              id="login-dropdown"
-              className="custom-dropdown"
-              show={showDropdown}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+          <div className="d-flex align-items-center">
+            <h1
+              className="mb-0 fw-bold text-primary"
+              style={{
+                fontSize: scrolled ? "1.1rem" : "1.2rem",
+                letterSpacing: "0.5px",
+                transition: "font-size 0.3s ease",
+              }}
             >
-              <NavDropdown.Item
-                href="/adminlogin"
-                className="custom-dropdown-item"
-              >
+              TrackWise
+            </h1>
+          </div>
+
+          <Dropdown>
+            <Dropdown.Toggle
+              variant="light"
+              id="dropdown-basic"
+              className="border-0"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu align="end" className="shadow-sm">
+              <Dropdown.Item as={Link} to="/adminlogin" className="py-2">
+                <i className="bi bi-person-gear me-2"></i>
                 Admin Login
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item
-                href="/facultylogin"
-                className="custom-dropdown-item"
-              >
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to="/facultylogin" className="py-2">
+                <i className="bi bi-person-workspace me-2"></i>
                 Faculty Login
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </div>
-
-        {/* Mobile View */}
-        <div className="d-flex d-lg-none justify-content-between align-items-center w-100">
-          <div className="w-25" href="/">
-            <img
-              src="logo.png"
-              width="100"
-              height="100"
-              alt="Logo"
-              title="Logo"
-              className="img-fluid"
-              style={{ height: "100%", maxHeight: "50px", width: "auto" }}
-            />
-          </div>
-
-          <div className="w-25 justify-content-center ">
-            <h1 className="mb-0 mobile-title text-primary" style={{fontFamily:"fantasy"}}>Track Wise</h1>
-          </div>
-
-          <NavDropdown
-            title={<i className="bi bi-list fs-4"></i>}
-            id="mobile-dropdown"
-            align="end"
-            className="mobile-menu me-2"
-          >
-            <NavDropdown.Item href="/adminlogin" className="py-2">
-              Admin Login
-            </NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="/facultylogin" className="py-2">
-              Faculty Login
-            </NavDropdown.Item>
-          </NavDropdown>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </Container>
 
       <style jsx>{`
-        .custom-dropdown .dropdown-menu,
-        .mobile-menu .dropdown-menu {
-          background: #ffffff;
-          border-radius: 8px;
-          border: 1px solid #e0e0e0;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .dropdown-toggle::after {
+          display: none;
+        }
+
+        .dropdown-menu {
           min-width: 200px;
+          margin-top: 0.5rem;
+          border: 1px solid rgba(0, 0, 0, 0.08);
         }
-        .custom-dropdown-item:hover,
+
+        .dropdown-item {
+          color: #333;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+
         .dropdown-item:hover {
-          background-color: #0097b2;
-          color: white;
-        }
-        @media (max-width: 991px) {
-          .mobile-brand img {
-            width: 80px;
-            height: auto;
-          }
-          .mobile-title {
-            font-size: 1rem;
-            margin: 0 10px;
-            white-space: nowrap;
-          }
-          .mobile-menu {
-            margin-left: 10px;
-          }
-          .mobile-menu .dropdown-toggle::after {
-            display: none;
-          }
-          .mobile-menu .dropdown-menu {
-            right: 0;
-            left: auto;
-            margin-top: 10px;
-          }
-        }
-        @media (max-width: 400px) {
-          .mobile-title {
-            font-size: 0.9rem;
-          }
-          .mobile-brand img {
-            width: 60px;
-          }
+          color: var(--bs-primary);
+          background-color: rgba(0, 0, 0, 0.05);
         }
       `}</style>
     </Navbar>

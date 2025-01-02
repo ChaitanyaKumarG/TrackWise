@@ -84,7 +84,7 @@ function FacultyData() {
       </div>
 
       {/* Faculty Cards */}
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 border">
         {filteredFaculty.map((fac) => (
           <div key={fac.FacultyID} className="col">
             <div className="card h-100 border-0 shadow-sm">
@@ -95,7 +95,8 @@ function FacultyData() {
                   </div>
                   <div>
                     <h5 className="card-title mb-1">{fac.Name}</h5>
-                    <small className="text-muted">ID: {fac.FacultyID}</small>
+                    <small className="text-muted">ID: {fac.FacultyKey}</small>
+                    <small className="text-muted ms-3">Password: {fac.Password}</small>
                   </div>
                 </div>
                 <div className="d-flex align-items-center mb-2">

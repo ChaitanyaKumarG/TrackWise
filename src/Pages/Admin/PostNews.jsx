@@ -1,12 +1,38 @@
 import React, { useState } from "react";
 import newsService from "../../Services/Admin/newsService";
 
+const SuccessModal = ({ show, onClose }) => {
+  if (!show) return null;
+
+  return (
+    <div className="modal d-block" tabIndex="-1">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-body text-center p-5">
+            <div className="mb-4">
+              <i
+                className="bi bi-check-circle-fill text-success"
+                style={{ fontSize: "4rem" }}
+              ></i>
+            </div>
+            <h4 className="mb-3">News Posted Successfully!</h4>
+            <button className="btn btn-primary btn-lg w-100" onClick={onClose}>
+              <i className="bi bi-arrow-right-circle me-2"></i>
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function PostNews() {
   const [formData, setFormData] = useState({
     Title: "",
     Description: "",
   });
-  const [success, setSuccess] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,21 +46,23 @@ function PostNews() {
     setIsLoading(true);
     try {
       await newsService.postNews(formData);
-      setSuccess("News posted successfully!");
+      setShowModal(true);
       setError("");
       setFormData({
         Title: "",
         Description: "",
       });
-      // Auto-hide success message after 3 seconds
-      setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       console.error("Error posting news:", err);
       setError("Failed to post news. Please try again.");
-      setSuccess("");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    window.location.reload();
   };
 
   return (
@@ -47,20 +75,8 @@ function PostNews() {
           </h5>
         </div>
         <div className="card-body">
-          {success && (
-            <div
-              className="alert alert-success d-flex align-items-center"
-              role="alert"
-            >
-              <i className="bi bi-check-circle-fill me-2"></i>
-              {success}
-            </div>
-          )}
           {error && (
-            <div
-              className="alert alert-danger d-flex align-items-center"
-              role="alert"
-            >
+            <div className="alert alert-danger d-flex align-items-center">
               <i className="bi bi-exclamation-triangle-fill me-2"></i>
               {error}
             </div>
@@ -106,7 +122,6 @@ function PostNews() {
                   <span
                     className="spinner-border spinner-border-sm me-2"
                     role="status"
-                    aria-hidden="true"
                   ></span>
                   Posting...
                 </>
@@ -120,6 +135,7 @@ function PostNews() {
           </form>
         </div>
       </div>
+      <SuccessModal show={showModal} onClose={handleModalClose} />
     </div>
   );
 }
