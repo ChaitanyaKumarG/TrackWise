@@ -4,6 +4,7 @@ import newsService from "../Services/Admin/newsService";
 const Homepage = () => {
   const [news, setNews] = useState([]);
   const [displayText, setDisplayText] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const currentHour = new Date().getHours();
   let greeting = "Good Morning..";
@@ -29,48 +30,56 @@ const Homepage = () => {
         setNews([...response].reverse());
       } catch (error) {
         console.error("Failed to fetch news:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchNews();
   }, []);
 
   return (
-    <div className="bg-primary bg-opacity-25">
-      <div className="container py-5">
-        <div className="text-start mb-5">
-          <h1 className="display-4 fw-bold mb-4 typing-animation greeting-text">
+    <div className="homepage-wrapper min-vh-100">
+      <div className="container py-4">
+        <div className="greeting-section mb-4">
+          <h1 className="display-5 fw-bold greeting-text">
             {displayText}
             <span className="cursor"></span>
           </h1>
         </div>
 
-        <div className="row g-4 mt-4">
-          {news.length > 0 ? (
-            news.map((item, index) => (
-              <div className="col-md-4" key={index}>
-                <div className="card border-0 shadow-sm rounded-3 h-100">
-                  <div className="card-body d-flex align-items-center">
-                    <div className="me-3">
-                      <div
-                        className="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
-                        style={{ width: "50px", height: "50px" }}
-                      >
-                        <i className="bi bi-check-circle text-primary fs-4"></i>
+        <div className="news-container">
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : news.length > 0 ? (
+            <div className="news-grid">
+              {news.map((item, index) => (
+                <div className="news-card" key={index}>
+                  <div className="card h-100 border-0 shadow-sm hover-card">
+                    <div className="card-body p-3 d-flex gap-3">
+                      <div className="news-icon">
+                        <div className="icon-circle">
+                          <i className="bi bi-megaphone-fill"></i>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <h5 className="fw-bold mb-1 text-black">
-                        {item.Title}
-                      </h5>
-                      <p className="text-muted mb-0">{item.Description}</p>
+                      <div className="news-content">
+                        <h5 className="card-title mb-2">{item.Title}</h5>
+                        <p className="card-text text-muted mb-0">
+                          {item.Description}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
-            <div className="col-12 text-center">
-              <p className="text-muted">Loading news...</p>
+            <div className="text-center py-5">
+              <i className="bi bi-inbox-fill display-4 text-muted mb-3"></i>
+              <p className="text-muted">No news available at the moment</p>
             </div>
           )}
         </div>
@@ -80,27 +89,108 @@ const Homepage = () => {
         className="position-fixed bottom-0 end-0 p-3"
         style={{ zIndex: "1050" }}
       >
-        <a href="/parentlogin" className="btn btn-primary btn-lg">
+        <a
+          href="/parentlogin"
+          className="btn btn-primary btn-lg shadow-lg hover-button"
+        >
           <i className="bi bi-person-check me-2"></i> Parent Login
         </a>
       </div>
 
       <style jsx>{`
-        .greeting-text {
-          font-family: "Consolas", monospace;
+        .homepage-wrapper {
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         }
 
-        .typing-animation {
-          position: relative;
+        .greeting-section {
+          padding: 1rem 0;
+        }
+
+        .greeting-text {
+          font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+          color: #2c3e50;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+          animation: fadeIn 0.5s ease-out;
         }
 
         .cursor {
           display: inline-block;
           width: 3px;
           height: 1em;
-          background-color: #000;
-          margin-left: 2px;
+          background-color: #2c3e50;
+          margin-left: 4px;
           animation: blink 1s infinite;
+          vertical-align: middle;
+        }
+
+        .news-grid {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .news-card {
+          animation: slideUp 0.3s ease-out forwards;
+          opacity: 0;
+        }
+
+        .news-card:nth-child(n) {
+          animation-delay: calc(n * 0.1s);
+        }
+
+        .hover-card {
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          border-radius: 12px;
+        }
+
+        .hover-card:active {
+          transform: scale(0.98);
+        }
+
+        .icon-circle {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 1.25rem;
+          box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1);
+        }
+
+        .hover-button {
+          transition: transform 0.2s ease;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+          border: none;
+        }
+
+        .hover-button:active {
+          transform: scale(0.95);
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         @keyframes blink {
@@ -110,6 +200,26 @@ const Homepage = () => {
           }
           50% {
             opacity: 0;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .greeting-text {
+            font-size: 2rem;
+          }
+
+          .news-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .card-body {
+            padding: 1rem;
+          }
+
+          .icon-circle {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
           }
         }
       `}</style>

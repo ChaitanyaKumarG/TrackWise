@@ -22,7 +22,7 @@ import Taskbar from "./Components/Common/Navbar";
 
 function App() {
   return (
-    <div>
+    <div style={{height:"100vh"}}>
       <BrowserRouter>
       <Taskbar/>
         <Routes>

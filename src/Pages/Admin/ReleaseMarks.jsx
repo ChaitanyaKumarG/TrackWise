@@ -179,90 +179,291 @@
 // };
 
 // export default ReleaseMarks;
-
 import React, { useState } from "react";
-import axios from "axios"; // For making API requests
+import axios from "axios";
 
 const AdminPage = () => {
-  const [testTypeID, setTestTypeID] = useState(""); // State for selected Test Type
-  const [message, setMessage] = useState(""); // State for success/error messages
+  const [testTypeID, setTestTypeID] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Test Type Options
   const testTypes = [
-    { id: 1, name: "Weekly Test" },
-    { id: 2, name: "FA" },
-    { id: 3, name: "SA" },
+    { id: 1, name: "Weekly Test", icon: "bi-calendar-week" },
+    { id: 2, name: "FA", icon: "bi-file-text" },
+    { id: 3, name: "SA", icon: "bi-journal-check" },
   ];
 
-  // Handle Test Type Selection
   const handleTestTypeChange = (e) => {
     setTestTypeID(e.target.value);
+    setMessage("");
   };
 
-  // Handle Release Marks
-  const handleReleaseMarks = () => {
+  const handleConfirmClick = () => {
     if (!testTypeID) {
       setMessage("Please select a test type.");
       return;
     }
+    setShowConfirmModal(true);
+  };
 
-    // API call to approve marks by Test Type
+  const handleReleaseMarks = () => {
+    setLoading(true);
+    setShowConfirmModal(false);
+
     axios
-      .post("http://127.0.0.1:1321/studentmarks/approve", { testTypeID }) // Assuming the backend route
+      .post("http://127.0.0.1:1321/studentmarks/approve", { testTypeID })
       .then((response) => {
-        setMessage("Marks released successfully for the selected test type!");
+        setMessage("Marks released successfully! ✅");
+        setTestTypeID("");
       })
       .catch((error) => {
-        setMessage("Error releasing marks. Please try again.");
+        setMessage("Failed to release marks. Please try again. ❌");
         console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
+  const selectedTest = testTypes.find((t) => t.id === parseInt(testTypeID));
+
   return (
-    <div className="container mt-5">
-      <h1 className="text-center mb-4">Admin: Release Marks</h1>
-      <div className="card p-4">
-        <div className="form-group">
-          <label htmlFor="testType" className="form-label">
-            Select Test Type:
-          </label>
-          <select
-            className="form-select"
-            id="testType"
-            value={testTypeID}
-            onChange={handleTestTypeChange}
-          >
-            <option value="">-- Select Test Type --</option>
-            {testTypes.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
+    <div className="min-vh-100 bg-light">
+      <div className="container-fluid px-3 py-4">
+        <div className="card border-0 shadow-sm">
+          <div className="card-header bg-primary text-white border-0">
+            <h1 className="h4 mb-0 py-2 text-center">
+              <i className="bi bi-unlock-fill me-2"></i>
+              Release Marks
+            </h1>
+          </div>
+
+          <div className="card-body p-4">
+            <div className="form-group mb-4">
+              <label htmlFor="testType" className="form-label fw-bold mb-3">
+                <i className="bi bi-list-check me-2"></i>
+                Select Test Type
+              </label>
+              <select
+                className="form-select form-select-lg shadow-sm"
+                id="testType"
+                value={testTypeID}
+                onChange={handleTestTypeChange}
+              >
+                <option value="">-- Select Test Type --</option>
+                {testTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="d-grid gap-2">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={handleConfirmClick}
+                disabled={loading || !testTypeID}
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Releasing...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle-fill me-2"></i>
+                    Release Marks
+                  </>
+                )}
+              </button>
+            </div>
+
+            {message && (
+              <div
+                className={`alert ${
+                  message.includes("successfully")
+                    ? "alert-success"
+                    : "alert-danger"
+                } mt-4 animate-alert`}
+                role="alert"
+              >
+                <i
+                  className={`bi ${
+                    message.includes("successfully")
+                      ? "bi-check-circle"
+                      : "bi-exclamation-circle"
+                  } me-2`}
+                ></i>
+                {message}
+              </div>
+            )}
+          </div>
         </div>
 
-        <button className="btn btn-primary mt-3" onClick={handleReleaseMarks}>
-          Release Marks
-        </button>
-
-        {message && (
-          <div
-            className={`alert mt-3 ${
-              message.includes("successfully")
-                ? "alert-success"
-                : "alert-danger"
-            }`}
-          >
-            {message}
-          </div>
+        {/* Fixed Confirmation Modal */}
+        {showConfirmModal && (
+          <>
+            <div className="confirmation-modal">
+              <div className="confirmation-content">
+                <div className="text-center mb-4">
+                  <i className="bi bi-exclamation-circle text-warning display-4"></i>
+                  <h5 className="mt-3">Confirm Release</h5>
+                  <p className="mb-4">
+                    Are you sure you want to release marks for{" "}
+                    <strong>{selectedTest?.name}</strong>?
+                  </p>
+                </div>
+                <div className="d-flex gap-2 justify-content-center">
+                  <button
+                    className="btn btn-outline-secondary px-4"
+                    onClick={() => setShowConfirmModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-primary px-4"
+                    onClick={handleReleaseMarks}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="modal-backdrop"
+              onClick={() => setShowConfirmModal(false)}
+            ></div>
+          </>
         )}
       </div>
+
+      <style jsx>{`
+        /* Card Styles */
+        .card {
+          border-radius: 15px;
+          transition: all 0.3s ease;
+        }
+
+        .card-header {
+          border-radius: 15px 15px 0 0 !important;
+        }
+
+        /* Form Control Styles */
+        .form-select {
+          border: 1px solid #dee2e6;
+          border-radius: 10px;
+          padding: 0.75rem 1rem;
+          transition: all 0.2s ease;
+        }
+
+        .form-select:focus {
+          border-color: #80bdff;
+          box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.15);
+        }
+
+        /* Button Styles */
+        .btn {
+          border-radius: 10px;
+          padding: 0.75rem 1.5rem;
+          transition: all 0.2s ease;
+        }
+
+        .btn:active {
+          transform: scale(0.98);
+        }
+
+        /* Alert Animation */
+        .animate-alert {
+          animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Confirmation Modal Styles */
+        .confirmation-modal {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: white;
+          padding: 1.5rem;
+          border-radius: 15px;
+          z-index: 1060;
+          width: 90%;
+          max-width: 320px;
+          animation: modalIn 0.3s ease-out;
+        }
+
+        .confirmation-content {
+          width: 100%;
+        }
+
+        .modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1050;
+          animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes modalIn {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -40%);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 576px) {
+          .container-fluid {
+            padding: 1rem;
+          }
+
+          .card-body {
+            padding: 1.25rem;
+          }
+
+          .btn {
+            padding: 0.875rem 1.25rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
 export default AdminPage;
-
 // // import React, { useState, useEffect } from "react";
 // // import axios from "axios"; // For making API requests
 

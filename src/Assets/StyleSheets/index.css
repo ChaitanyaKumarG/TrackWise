@@ -7,6 +7,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Enable smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

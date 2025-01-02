@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import postMarksService from "../../Services/Faculty/postingMarksServices"; // Import the service module
+import postMarksService from "../../Services/Faculty/postingMarksServices";
 
 const PostMarks = () => {
   const [classes, setClasses] = useState([]);
@@ -7,6 +7,8 @@ const PostMarks = () => {
   const [testTypes, setTestTypes] = useState([]);
   const [students, setStudents] = useState([]);
   const [marks, setMarks] = useState([]);
+  const [showStudents, setShowStudents] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     selectedClass: "",
@@ -18,10 +20,10 @@ const PostMarks = () => {
   const { selectedClass, selectedSubject, selectedTestType, selectedDate } =
     formData;
 
-  // Fetch classes, subjects, and test types on load
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
+        setLoading(true);
         const [classRes, subjectRes, testTypeRes] = await Promise.all([
           postMarksService.getClasses(),
           postMarksService.getSubjects(),
@@ -32,14 +34,16 @@ const PostMarks = () => {
         setTestTypes(testTypeRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchInitialData();
   }, []);
 
-  // Fetch students when a class is selected
   useEffect(() => {
     if (selectedClass) {
+      setLoading(true);
       postMarksService
         .getStudentsByClass(selectedClass)
         .then((res) => {
@@ -52,7 +56,8 @@ const PostMarks = () => {
             }))
           );
         })
-        .catch((error) => console.error("Error fetching students:", error));
+        .catch((error) => console.error("Error fetching students:", error))
+        .finally(() => setLoading(false));
     }
   }, [selectedClass]);
 
@@ -79,7 +84,7 @@ const PostMarks = () => {
     );
   };
 
-  const handleSubmit = async () => {
+  const handleProceed = () => {
     if (
       !selectedClass ||
       !selectedSubject ||
@@ -89,7 +94,10 @@ const PostMarks = () => {
       alert("Please fill all required fields.");
       return;
     }
+    setShowStudents(true);
+  };
 
+  const handleSubmit = async () => {
     const invalidMarks = marks.some(
       (mark) =>
         !mark.Absent &&
@@ -113,145 +121,255 @@ const PostMarks = () => {
     }));
 
     try {
+      setLoading(true);
       await postMarksService.submitMarks(data);
       alert("Marks submitted successfully");
+      setShowStudents(false);
+      setFormData({
+        selectedClass: "",
+        selectedSubject: "",
+        selectedTestType: "",
+        selectedDate: "",
+      });
     } catch (error) {
       console.error("Error submitting marks:", error);
       alert("Error submitting marks");
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <div className="container my-4">
-      <h1 className="text-center mb-4">Post Marks</h1>
-      <div className="row g-3 mb-3">
-        <div className="col-md-3">
-          <label className="form-label">Class:</label>
-          <select
-            className="form-select"
-            name="selectedClass"
-            value={selectedClass}
-            onChange={handleFormChange}
-          >
-            <option value="">Select Class</option>
-            {classes.map((cls) => (
-              <option key={cls.ClassID} value={cls.ClassID}>
-                {cls.ClassStandard}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Subject:</label>
-          <select
-            className="form-select"
-            name="selectedSubject"
-            value={selectedSubject}
-            onChange={handleFormChange}
-          >
-            <option value="">Select Subject</option>
-            {subjects.map((sub) => (
-              <option key={sub.SubjectID} value={sub.SubjectID}>
-                {sub.SubjectName}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Test Type:</label>
-          <select
-            className="form-select"
-            name="selectedTestType"
-            value={selectedTestType}
-            onChange={handleFormChange}
-          >
-            <option value="">Select Test Type</option>
-            {testTypes.map((tt) => (
-              <option key={tt.TestTypeID} value={tt.TestTypeID}>
-                {tt.TestName}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Date:</label>
-          <input
-            type="date"
-            className="form-control"
-            name="selectedDate"
-            value={selectedDate}
-            onChange={handleFormChange}
-          />
+  if (loading) {
+    return (
+      <div
+        className="container-fluid d-flex justify-content-center align-items-center"
+        style={{ minHeight: "80vh" }}
+      >
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-2">Loading...</p>
         </div>
       </div>
+    );
+  }
 
-      {students.length > 0 && (
-        <div>
-          <h3 className="text-center my-4">Enter Marks</h3>
-          <table className="table table-bordered text-center">
-            <thead className="table-light">
-              <tr>
-                <th>#</th>
-                <th>Student Name</th>
-                <th>Marks</th>
-                <th>Absent</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student, index) => (
-                <tr key={student.StudentID}>
-                  <td>{index + 1}</td>
-                  <td>{student.StudentName}</td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Marks"
-                      value={
-                        marks.find(
-                          (mark) => mark.StudentID === student.StudentID
-                        )?.MarksObtained || ""
-                      }
-                      onChange={(e) =>
-                        handleMarkChange(student.StudentID, e.target.value)
-                      }
-                      disabled={
-                        marks.find(
-                          (mark) => mark.StudentID === student.StudentID
-                        )?.Absent
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      checked={
-                        marks.find(
-                          (mark) => mark.StudentID === student.StudentID
-                        )?.Absent || false
-                      }
-                      onChange={(e) =>
-                        handleAbsentChange(student.StudentID, e.target.checked)
-                      }
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  return (
+    <div className="container-fluid px-3 py-4">
+      {!showStudents ? (
+        <div className="card shadow-sm">
+          <div className="card-header bg-primary text-white py-3">
+            <h4 className="mb-0 text-center">
+              <i className="bi bi-pencil-square me-2"></i>
+              Post Marks
+            </h4>
+          </div>
+          <div className="card-body p-4">
+            <div className="mb-4">
+              <label className="form-label">
+                <i className="bi bi-mortarboard me-2"></i>Class
+              </label>
+              <select
+                className="form-select form-select-lg mb-3"
+                name="selectedClass"
+                value={selectedClass}
+                onChange={handleFormChange}
+              >
+                <option value="">Select Class</option>
+                {classes.map((cls) => (
+                  <option key={cls.ClassID} value={cls.ClassID}>
+                    {cls.ClassStandard}
+                  </option>
+                ))}
+              </select>
+
+              <label className="form-label">
+                <i className="bi bi-book me-2"></i>Subject
+              </label>
+              <select
+                className="form-select form-select-lg mb-3"
+                name="selectedSubject"
+                value={selectedSubject}
+                onChange={handleFormChange}
+              >
+                <option value="">Select Subject</option>
+                {subjects.map((sub) => (
+                  <option key={sub.SubjectID} value={sub.SubjectID}>
+                    {sub.SubjectName}
+                  </option>
+                ))}
+              </select>
+
+              <label className="form-label">
+                <i className="bi bi-list-check me-2"></i>Test Type
+              </label>
+              <select
+                className="form-select form-select-lg mb-3"
+                name="selectedTestType"
+                value={selectedTestType}
+                onChange={handleFormChange}
+              >
+                <option value="">Select Test Type</option>
+                {testTypes.map((tt) => (
+                  <option key={tt.TestTypeID} value={tt.TestTypeID}>
+                    {tt.TestName}
+                  </option>
+                ))}
+              </select>
+
+              <label className="form-label">
+                <i className="bi bi-calendar me-2"></i>Date
+              </label>
+              <input
+                type="date"
+                className="form-control form-control-lg"
+                name="selectedDate"
+                value={selectedDate}
+                onChange={handleFormChange}
+              />
+            </div>
+
+            <button
+              className="btn btn-primary btn-lg w-100"
+              onClick={handleProceed}
+              disabled={
+                !selectedClass ||
+                !selectedSubject ||
+                !selectedTestType ||
+                !selectedDate
+              }
+            >
+              <i className="bi bi-arrow-right-circle me-2"></i>
+              Proceed to Enter Marks
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="card shadow-sm">
+          <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+            <button
+              className="btn btn-link text-white p-0"
+              onClick={() => setShowStudents(false)}
+            >
+              <i className="bi bi-arrow-left-circle fs-4"></i>
+            </button>
+            <h4 className="mb-0">Enter Marks</h4>
+            <div style={{ width: "24px" }}></div>
+          </div>
+          <div className="card-body p-0">
+            <div className="p-3 bg-light border-bottom">
+              <div className="row g-2">
+                <div className="col-6">
+                  <small className="text-muted">Class:</small>
+                  <div>
+                    {
+                      classes.find((c) => c.ClassID === selectedClass)
+                        ?.ClassStandard
+                    }
+                  </div>
+                </div>
+                <div className="col-6">
+                  <small className="text-muted">Subject:</small>
+                  <div>
+                    {
+                      subjects.find((s) => s.SubjectID === selectedSubject)
+                        ?.SubjectName
+                    }
+                  </div>
+                </div>
+                <div className="col-6">
+                  <small className="text-muted">Test:</small>
+                  <div>
+                    {
+                      testTypes.find((t) => t.TestTypeID === selectedTestType)
+                        ?.TestName
+                    }
+                  </div>
+                </div>
+                <div className="col-6">
+                  <small className="text-muted">Date:</small>
+                  <div>{new Date(selectedDate).toLocaleDateString()}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="table-responsive">
+              <table className="table table-bordered mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th className="text-center">#</th>
+                    <th>Name</th>
+                    <th className="text-center">Marks</th>
+                    <th className="text-center">Absent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((student, index) => (
+                    <tr key={student.StudentID}>
+                      <td className="text-center">{index + 1}</td>
+                      <td>{student.StudentName}</td>
+                      <td>
+                        <input
+                          type="number"
+                          className="form-control form-control-lg text-center"
+                          placeholder="Marks"
+                          value={
+                            marks.find(
+                              (mark) => mark.StudentID === student.StudentID
+                            )?.MarksObtained || ""
+                          }
+                          onChange={(e) =>
+                            handleMarkChange(student.StudentID, e.target.value)
+                          }
+                          disabled={
+                            marks.find(
+                              (mark) => mark.StudentID === student.StudentID
+                            )?.Absent
+                          }
+                        />
+                      </td>
+                      <td className="text-center">
+                        <div className="form-check d-flex justify-content-center">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            checked={
+                              marks.find(
+                                (mark) => mark.StudentID === student.StudentID
+                              )?.Absent || false
+                            }
+                            onChange={(e) =>
+                              handleAbsentChange(
+                                student.StudentID,
+                                e.target.checked
+                              )
+                            }
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="card-footer p-3">
+            <button
+              className="btn btn-primary btn-lg w-100"
+              onClick={handleSubmit}
+            >
+              <i className="bi bi-save me-2"></i>
+              Submit Marks
+            </button>
+          </div>
         </div>
       )}
-
-      <button className="btn btn-primary w-100" onClick={handleSubmit}>
-        Submit Marks
-      </button>
     </div>
   );
 };
 
 export default PostMarks;
-
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";
 

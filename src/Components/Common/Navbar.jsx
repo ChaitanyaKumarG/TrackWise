@@ -40,14 +40,14 @@ const TaskBar = () => {
               onMouseLeave={handleMouseLeave}
             >
               <NavDropdown.Item
-                href="/admin-login"
+                href="/adminlogin"
                 className="custom-dropdown-item"
               >
                 Admin Login
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item
-                href="/faculty-login"
+                href="/facultylogin"
                 className="custom-dropdown-item"
               >
                 Faculty Login
