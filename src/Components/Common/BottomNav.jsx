@@ -9,34 +9,28 @@ const BottomNav = () => {
       <nav className="bottom-nav">
         <a
           href="/"
-          className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+         className="nav-item"
         >
           <i className="bi bi-house-fill"></i>
           <span>Home</span>
         </a>
         <a
           href="/timetable"
-          className={`nav-item ${
-            location.pathname === "/timetable" ? "active" : ""
-          }`}
+         className="nav-item"
         >
           <i className="bi bi-calendar-week"></i>
           <span>Time Table</span>
         </a>
         <a
           href="/quiz"
-          className={`nav-item ${
-            location.pathname === "/quiz" ? "active" : ""
-          }`}
+         className="nav-item"
         >
           <i className="bi bi-award-fill "></i>
           <span>Quizzes</span>
         </a>
         <a
           href="/parentlogin"
-          className={`nav-item ${
-            location.pathname === "/profile" ? "active" : ""
-          }`}
+          className="nav-item"
         >
           <i className="bi bi-person-fill"></i>
           <span>Parent Login</span>
