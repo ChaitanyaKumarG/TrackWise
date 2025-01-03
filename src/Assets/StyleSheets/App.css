@@ -1,5 +1,8 @@
-
-
+.homepage-wrapper {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding-top: 60px;
+  padding-bottom: 70px;
+}
 
 .card {
   border-radius: 15px;
@@ -34,7 +37,6 @@ h3 {
   height: 40vmin;
   pointer-events: none;
 }
-
 
 .animated-greeting {
   animation: fadeSlideIn 2s ease-in-out;

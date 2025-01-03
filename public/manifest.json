@@ -26,9 +26,8 @@
       "purpose": "splash"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
   "theme_color": "#1E90FF",
   "background_color": "#1E90FF",
   "splash_screen": {

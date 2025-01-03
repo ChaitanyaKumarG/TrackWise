@@ -14,7 +14,7 @@ function CreateData() {
   };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div className="container-fluid min-vh-100 homepage-wrapper d-flex align-items-center justify-content-center bg-light">
       <div className="card shadow-sm w-100" style={{ maxWidth: "400px" }}>
         <div className="card-header bg-primary text-white text-center py-3">
           <i className="bi bi-person-plus-fill fs-1"></i>

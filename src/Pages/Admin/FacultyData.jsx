@@ -55,9 +55,9 @@ function FacultyData() {
   }
 
   return (
-    <div className="container-fluid py-4 px-3">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
       {/* Header Section */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex justify-content-between align-items-center mb-4 mt-4">
         <h2 className="h4 mb-0">
           <i className="bi bi-people-fill me-2"></i>
           Faculty Directory
@@ -96,7 +96,9 @@ function FacultyData() {
                   <div>
                     <h5 className="card-title mb-1">{fac.Name}</h5>
                     <small className="text-muted">ID: {fac.FacultyKey}</small>
-                    <small className="text-muted ms-3">Password: {fac.Password}</small>
+                    <small className="text-muted ms-3">
+                      Password: {fac.Password}
+                    </small>
                   </div>
                 </div>
                 <div className="d-flex align-items-center mb-2">

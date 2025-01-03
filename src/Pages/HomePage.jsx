@@ -39,7 +39,8 @@ const Homepage = () => {
 
   return (
     <div className="homepage-wrapper min-vh-100">
-      <div className="container py-4">
+
+      <div className="container py-4 main-content">
         <div className="greeting-section mb-4">
           <h1 className="display-5 fw-bold greeting-text">
             {displayText}
@@ -85,21 +86,16 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div
-        className="position-fixed bottom-0 end-0 p-3"
-        style={{ zIndex: "1050" }}
-      >
-        <a
-          href="/parentlogin"
-          className="btn btn-primary btn-lg shadow-lg hover-button"
-        >
-          <i className="bi bi-person-check me-2"></i> Parent Login
-        </a>
-      </div>
 
       <style jsx>{`
         .homepage-wrapper {
           background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          padding-top: 60px;
+          padding-bottom: 70px;
+        }
+
+        .main-content {
+          margin-bottom: 70px;
         }
 
         .greeting-section {
@@ -113,6 +109,12 @@ const Homepage = () => {
           animation: fadeIn 0.5s ease-out;
         }
 
+        .news-grid {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
         .cursor {
           display: inline-block;
           width: 3px;
@@ -121,30 +123,6 @@ const Homepage = () => {
           margin-left: 4px;
           animation: blink 1s infinite;
           vertical-align: middle;
-        }
-
-        .news-grid {
-          display: grid;
-          gap: 1rem;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        }
-
-        .news-card {
-          animation: slideUp 0.3s ease-out forwards;
-          opacity: 0;
-        }
-
-        .news-card:nth-child(n) {
-          animation-delay: calc(n * 0.1s);
-        }
-
-        .hover-card {
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-          border-radius: 12px;
-        }
-
-        .hover-card:active {
-          transform: scale(0.98);
         }
 
         .icon-circle {
@@ -158,49 +136,6 @@ const Homepage = () => {
           color: white;
           font-size: 1.25rem;
           box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1);
-        }
-
-        .hover-button {
-          transition: transform 0.2s ease;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-          border: none;
-        }
-
-        .hover-button:active {
-          transform: scale(0.95);
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes blink {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0;
-          }
         }
 
         @media (max-width: 768px) {
@@ -220,6 +155,27 @@ const Homepage = () => {
             width: 40px;
             height: 40px;
             font-size: 1rem;
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes blink {
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0;
           }
         }
       `}</style>

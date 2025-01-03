@@ -101,8 +101,8 @@ function CreateFaculty() {
   ];
 
   return (
-    <div className="container-fluid py-4 px-3">
-      <div className="row justify-content-center">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
+      <div className="row justify-content-center mt-4">
         <div className="col-12 col-md-8 col-lg-6">
           <div className="card border-0 shadow-sm">
             <div className="card-body p-4">

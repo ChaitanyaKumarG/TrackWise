@@ -188,9 +188,9 @@ const PostMarks = () => {
   }
 
   return (
-    <div className="container-fluid px-3 py-4">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
       {!showStudents ? (
-        <div className="card shadow-sm">
+        <div className="card shadow-sm mt-5">
           <div className="card-header bg-primary text-white py-3">
             <h4 className="mb-0 text-center">
               <i className="bi bi-pencil-square me-2"></i>
@@ -399,8 +399,6 @@ const PostMarks = () => {
       )}
       <SuccessModal show={showSuccessModal} onClose={handleModalClose} />
     </div>
-
-    
   );
 
   

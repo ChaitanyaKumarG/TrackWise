@@ -66,8 +66,8 @@ function PostNews() {
   };
 
   return (
-    <div className="container-fluid px-3 py-4">
-      <div className="card shadow-sm">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
+      <div className="card mt-5 shadow-sm">
         <div className="card-header bg-primary text-white">
           <h5 className="mb-0">
             <i className="bi bi-newspaper me-2"></i>

@@ -165,8 +165,8 @@ function CreateStudent() {
   ];
 
   return (
-    <div className="container-fluid py-3 px-3">
-      <div className="card border-0 shadow-sm">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
+      <div className="card border-0 mt-5 shadow-sm">
         <div className="card-body p-3">
           {/* Progress Bar */}
           <div className="progress mb-4" style={{ height: "3px" }}>

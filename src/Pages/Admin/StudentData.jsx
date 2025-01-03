@@ -55,9 +55,9 @@ function StudentData() {
   );
 
   return (
-    <div className="container-fluid py-4 px-3">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
       {/* Header Section */}
-      <div className="card border-0 shadow-sm mb-4">
+      <div className="card border-0 shadow-sm mb-4 mt-5">
         <div className="card-body">
           <h2 className="h4 mb-4">
             <i className="bi bi-mortarboard-fill me-2"></i>

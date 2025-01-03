@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchStudentDetails } from "../../Services/Parent/studentService";
-import studentimg from "../../Assets/Images/student.png"
 
 
 const StudentProfile = () => {
@@ -42,7 +41,7 @@ const StudentProfile = () => {
   }
 
   return (
-    <div className="min-vh-100 bg-light">
+    <div className="min-vh-100 bg-light homepage-wrapper">
       {/* Header */}
       {/* <div
         className="start-0 w-100 bg-dark text-white "
@@ -60,7 +59,7 @@ const StudentProfile = () => {
       </div> */}
 
       {/* Content with padding for fixed header */}
-      <div className="pb-5">
+      <div className="">
         {/* Profile Section */}
         <div className="text-center p-4 bg-primary bg-opacity-10">
           <div className="position-relative d-inline-block mb-3">
@@ -183,7 +182,7 @@ const StudentProfile = () => {
           </div>
 
           {/* Address */}
-          <div className="card border-0 shadow-sm mb-5">
+          <div className="card border-0 shadow-sm mb-2">
             <div className="card-header bg-white border-0">
               <div className="d-flex align-items-center">
                 <i className="bi bi-geo-alt fs-5 text-primary me-2"></i>
@@ -199,7 +198,7 @@ const StudentProfile = () => {
 
       {/* Fixed Bottom Action Button */}
       <div
-        className="position-fixed bottom-0 start-0 w-100 p-3 bg-white shadow-lg"
+        className=" start-0 w-100 p-3 bg-white shadow-lg"
         style={{ zIndex: 1030 }}
       >
         <button

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchStudentMarks } from "../../Services/Parent/marksService";
 import { Pie } from "react-chartjs-2";
+
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -68,7 +70,7 @@ const StudentMarks = () => {
 
   if (loading) {
     return (
-      <div className="position-absolute top-50 start-50 translate-middle">
+      <div className="loading-container">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -78,9 +80,11 @@ const StudentMarks = () => {
 
   if (error) {
     return (
-      <div className="alert alert-danger mx-3 mt-3" role="alert">
-        <i className="bi bi-exclamation-triangle-fill me-2"></i>
-        {error}
+      <div className="error-container">
+        <div className="alert alert-danger" role="alert">
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          {error}
+        </div>
       </div>
     );
   }
@@ -128,24 +132,15 @@ const StudentMarks = () => {
   };
 
   return (
-    <div className="container-fluid px-0">
-      {/* Header */}
-      {/* <div className=" start-0 w-100 bg-dark text-white p-3" 
-           style={{ zIndex: 1030 }}>
-        <h5 className="mb-0 text-start">
-          <i className="bi bi-card-checklist me-2"></i>
-          Marks Report
-        </h5>
-      </div> */}
+    <div className="app-container">
 
-      {/* Main Content */}
-      <div className="mt-3 " >
+      <div className="content-wrapper">
         {/* Test Type Selection */}
-        <div className="d-flex justify-content-around mb-4 bg-light p-2 rounded-pill">
+        <div className="test-type-selector">
           {Object.entries(testTypeLabels).map(([id, label]) => (
             <button
               key={id}
-              className={`btn btn-sm ${activeTest === id ? 'btn-primary' : 'btn-light'} rounded px-3`}
+              className={`test-type-btn ${activeTest === id ? "active" : ""}`}
               onClick={() => setActiveTest(id)}
             >
               {label}
@@ -154,90 +149,278 @@ const StudentMarks = () => {
         </div>
 
         {/* Marks Cards */}
-        {groupedMarks[activeTest]?.map((mark, index) => (
-          <div key={index} className="card shadow-sm border border-dark border-1 mb-3 p-0">
-            <div className="card-body">
-              {/* Subject and Date */}
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <h4 className="mb-0">
+        <div className="marks-container">
+          {groupedMarks[activeTest]?.map((mark, index) => (
+            <div key={index} className="mark-card">
+              <div className="mark-card-header">
+                <h4 className="subject-name">
                   <i className="bi bi-book me-2 text-primary"></i>
                   {subjects[mark.SubjectID]}
                 </h4>
-                <small className="">
+                <small className="test-date">
                   <i className="bi bi-calendar3 me-1"></i>
                   {mark.DateConducted}
                 </small>
               </div>
 
-              {/* Marks Display */}
-              <div className="bg-light rounded text-center">
-                <div className="row align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0 text-primary">{mark.MarksObtained}</h3>
-                    <small className="text-muted">Marks Obtained</small>
-                  </div>
-                  <div className="col-auto">
-                    <h4 className="mb-0 text-muted">out of</h4>
-                  </div>
-                  <div className="col">
-                    <h3 className="mb-0">{maxMarks[activeTest]}</h3>
-                    <small className="text-muted">Maximum Marks</small>
-                  </div>
+              <div className="marks-display">
+                <div className="marks-obtained">
+                  <h3>{mark.MarksObtained}</h3>
+                  <small>Obtained</small>
+                </div>
+                <div className="marks-divider">
+                  <span>/</span>
+                </div>
+                <div className="marks-total">
+                  <h3>{maxMarks[activeTest]}</h3>
+                  <small>Total</small>
                 </div>
               </div>
 
-              {/* Percentage and Status */}
-              <div className="d-flex justify-content-between align-items-center mt-1 mb-0">
-                <div>
-                  <span className={`badge ${
-                    (mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35 
-                      ? 'bg-success' 
-                      : 'bg-danger'
-                  } rounded`}>
-                    {((mark.MarksObtained / maxMarks[activeTest]) * 100).toFixed(0)}%
-                  </span>
-                </div>
-                <small className={
-                  (mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35 
-                    ? 'text-success' 
-                    : 'text-danger'
-                }>
-                  <i className={`bi bi-${
-                    (mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35 
-                      ? 'emoji-smile' 
-                      : 'emoji-frown'
-                  } me-1`}></i>
-                  {(mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35 ? 'Pass' : 'Need Improvement'}
-                </small>
+              <div className="marks-footer">
+                <span
+                  className={`percentage-badge ${
+                    (mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35
+                      ? "success"
+                      : "danger"
+                  }`}
+                >
+                  {((mark.MarksObtained / maxMarks[activeTest]) * 100).toFixed(
+                    0
+                  )}
+                  %
+                </span>
+                <span
+                  className={`status-text ${
+                    (mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35
+                      ? "success"
+                      : "danger"
+                  }`}
+                >
+                  <i
+                    className={`bi bi-${
+                      (mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35
+                        ? "emoji-smile"
+                        : "emoji-frown"
+                    } me-1`}
+                  ></i>
+                  {(mark.MarksObtained / maxMarks[activeTest]) * 100 >= 35
+                    ? "Pass"
+                    : "Need Improvement"}
+                </span>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
         {/* Performance Overview */}
-        <div className="card shadow-sm mt-4">
-          <div className="card-body">
-            <h6 className="text-primary mb-3">
-              <i className="bi bi-pie-chart-fill me-2"></i>
-              Overall Performance
-            </h6>
-            <div style={{ height: "250px" }}>
-              <Pie
-                data={pieChartData}
-                options={{
-                  plugins: {
-                    legend: {
-                      position: "bottom",
-                      labels: { boxWidth: 12, padding: 15 },
-                    },
+        <div className="performance-card">
+          <h6 className="performance-title">
+            <i className="bi bi-pie-chart-fill me-2"></i>
+            Overall Performance
+          </h6>
+          <div className="chart-container">
+            <Pie
+              data={pieChartData}
+              options={{
+                plugins: {
+                  legend: {
+                    position: "bottom",
+                    labels: { boxWidth: 12, padding: 15 },
                   },
-                  maintainAspectRatio: false,
-                }}
-              />
-            </div>
+                },
+                maintainAspectRatio: false,
+              }}
+            />
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .app-container {
+          min-height: 100vh;
+          background-color: #f8f9fa;
+          padding: 60px 0 70px;
+        }
+
+        .content-wrapper {
+          padding: 16px;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+
+        .test-type-selector {
+          background: white;
+          padding: 8px;
+          border-radius: 20px;
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .test-type-btn {
+          border: none;
+          background: none;
+          padding: 8px 16px;
+          border-radius: 15px;
+          font-size: 0.9rem;
+          color: #666;
+          transition: all 0.2s;
+        }
+
+        .test-type-btn.active {
+          background: #007bff;
+          color: white;
+        }
+
+        .marks-container {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .mark-card {
+          background: white;
+          border-radius: 12px;
+          padding: 16px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .mark-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+        }
+
+        .subject-name {
+          margin: 0;
+          font-size: 1.1rem;
+          color: #333;
+        }
+
+        .test-date {
+          color: #666;
+        }
+
+        .marks-display {
+          background: #f8f9fa;
+          border-radius: 8px;
+          padding: 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 12px;
+        }
+
+        .marks-obtained,
+        .marks-total {
+          text-align: center;
+        }
+
+        .marks-obtained h3,
+        .marks-total h3 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .marks-obtained h3 {
+          color: #007bff;
+        }
+
+        .marks-divider {
+          color: #ccc;
+          font-size: 1.5rem;
+        }
+
+        .marks-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .percentage-badge {
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+
+        .percentage-badge.success {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        .percentage-badge.danger {
+          background: #f8d7da;
+          color: #721c24;
+        }
+
+        .status-text {
+          font-size: 0.9rem;
+        }
+
+        .status-text.success {
+          color: #155724;
+        }
+
+        .status-text.danger {
+          color: #721c24;
+        }
+
+        .performance-card {
+          background: white;
+          border-radius: 12px;
+          padding: 16px;
+          margin-top: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .performance-title {
+          color: #007bff;
+          margin-bottom: 16px;
+        }
+
+        .chart-container {
+          height: 250px;
+        }
+
+        .loading-container {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .error-container {
+          padding: 16px;
+          max-width: 600px;
+          margin: 20px auto;
+        }
+
+        @media (max-width: 480px) {
+          .content-wrapper {
+            padding: 12px;
+          }
+
+          .test-type-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+          }
+
+          .marks-display {
+            padding: 8px;
+          }
+
+          .marks-obtained h3,
+          .marks-total h3 {
+            font-size: 1.3rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };

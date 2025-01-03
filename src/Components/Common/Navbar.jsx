@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
+import { Navbar, Container, Dropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 
 const TaskBar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {

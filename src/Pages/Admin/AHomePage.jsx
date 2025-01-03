@@ -36,7 +36,7 @@ const AHomePage = () => {
   ];
 
   return (
-    <div className="container-fluid px-3 py-4">
+    <div className="container-fluid homepage-wrapper min-vh-100">
       <div className="card shadow-sm mb-4">
         <div className="card-body text-center p-4">
           <i className="bi bi-shield-lock fs-1 text-primary mb-2"></i>

@@ -229,7 +229,7 @@ const AdminPage = () => {
   const selectedTest = testTypes.find((t) => t.id === parseInt(testTypeID));
 
   return (
-    <div className="min-vh-100 bg-light">
+    <div className="min-vh-100 homepage-wrapper bg-light">
       <div className="container-fluid px-3 py-4">
         <div className="card border-0 shadow-sm">
           <div className="card-header bg-primary text-white border-0">

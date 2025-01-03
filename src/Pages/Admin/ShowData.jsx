@@ -22,8 +22,8 @@ function ShowData() {
   ];
 
   return (
-    <div className="container-fluid px-3 py-4">
-      <div className="card shadow-sm mb-4">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
+      <div className="card shadow-sm mb-4 mt-5">
         <div className="card-body text-center p-4">
           <i className="bi bi-database-fill fs-1 text-primary mb-2"></i>
           <h1 className="h3 mb-1">Data Management</h1>

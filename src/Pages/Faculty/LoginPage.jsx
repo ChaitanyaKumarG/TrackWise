@@ -44,10 +44,7 @@ const FLoginPage = () => {
   };
 
   return (
-    <div
-      className="d-flex align-items-center justify-content-center bg-light"
-      style={{ height: "100vh" }}
-    >
+    <div className="d-flex align-items-center justify-content-center bg-light min-vh-100 homepage-wrapper">
       <div className="container px-4">
         <div className="card border-0 shadow-sm">
           <div className="card-body p-4">
