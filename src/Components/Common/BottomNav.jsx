@@ -1,40 +1,26 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const BottomNav = () => {
-  const location = useLocation();
-
   return (
     <>
       <nav className="bottom-nav">
-        <a
-          href="/"
-         className="nav-item"
-        >
+        <Link to="/" className="nav-item">
           <i className="bi bi-house-fill"></i>
           <span>Home</span>
-        </a>
-        <a
-          href="/timetable"
-         className="nav-item"
-        >
+        </Link>
+        <Link to="/timetable" className="nav-item">
           <i className="bi bi-calendar-week"></i>
           <span>Time Table</span>
-        </a>
-        <a
-          href="/quiz"
-         className="nav-item"
-        >
-          <i className="bi bi-award-fill "></i>
+        </Link>
+        <Link to="/quiz" className="nav-item">
+          <i className="bi bi-award-fill"></i>
           <span>Quizzes</span>
-        </a>
-        <a
-          href="/parentlogin"
-          className="nav-item"
-        >
+        </Link>
+        <Link to="/parentlogin" className="nav-item">
           <i className="bi bi-person-fill"></i>
           <span>Parent Login</span>
-        </a>
+        </Link>
       </nav>
 
       <style jsx>{`
