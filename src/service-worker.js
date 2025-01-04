@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-globals */
-/* global request */
 
 import { clientsClaim } from "workbox-core";
 import { precacheAndRoute } from "workbox-precaching";
@@ -13,15 +12,16 @@ import { ExpirationPlugin } from "workbox-expiration";
 
 clientsClaim();
 
-// Precache files
+// Precache the files listed in the build manifest
 precacheAndRoute(self.__WB_MANIFEST);
-// Offline fallback
-const FALLBACK_HTML_URL = "/offline.html";
-precacheAndRoute([{ url: FALLBACK_HTML_URL, revision: "1" }]);
+
+// Fallback to `index.html` for navigation requests
+const FALLBACK_HTML_URL = "/index.html";
 
 // Cache API responses
 registerRoute(
-  ({ url }) => url.origin.includes("your-api-domain.com"),
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.startsWith("/api"),
   new NetworkFirst({
     cacheName: "api-cache",
     plugins: [
@@ -32,14 +32,25 @@ registerRoute(
   })
 );
 
+// Cache static assets (CSS, JS, Workers)
+registerRoute(
+  ({ request }) =>
+    request.destination === "style" ||
+    request.destination === "script" ||
+    request.destination === "worker",
+  new StaleWhileRevalidate({
+    cacheName: "static-assets",
+  })
+);
+
 // Cache images
 registerRoute(
-  ({ request }) => request.destination === "image", // Destructure `request` here
+  ({ request }) => request.destination === "image",
   new CacheFirst({
     cacheName: "image-cache",
     plugins: [
       new ExpirationPlugin({
-        maxEntries: 100,
+        maxEntries: 100, // Limit the number of images cached
       }),
     ],
   })
@@ -47,37 +58,56 @@ registerRoute(
 
 // Cache fonts
 registerRoute(
-  ({ request }) => request.destination === "font", // Destructure `request` here
+  ({ request }) => request.destination === "font",
   new CacheFirst({
     cacheName: "font-cache",
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 20, // Limit the number of fonts cached
+      }),
+    ],
   })
 );
 
-// Cache CSS and JS
+// Handle navigation requests (SPAs)
 registerRoute(
-  ({ request }) =>
-    request.destination === "style" || request.destination === "script", // Destructure `request` here
-  new StaleWhileRevalidate({
-    cacheName: "static-resources",
-  })
-);
-
-// Offline fallback for navigation requests
-registerRoute(
-  ({ request }) => request.mode === "navigate", // Destructure `request` here
-  async () => {
+  ({ request }) => request.mode === "navigate",
+  async ({ event }) => {
     try {
-      return await fetch(request); // Make sure `request` is used here
-    } catch {
-      return caches.match(FALLBACK_HTML_URL);
+      // Try fetching the requested page from the network
+      const response = await fetch(event.request);
+      if (!response || response.status === 404) {
+        throw new Error("Page not found on the network");
+      }
+      return response;
+    } catch (error) {
+      // If offline or page is not found, serve the cached `index.html`
+      return caches.match(FALLBACK_HTML_URL) || Response.error();
     }
   }
 );
 
+// Listen for "SKIP_WAITING" messages to update the service worker
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
+});
+
+// Activate the service worker and clear old caches
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          // Remove old caches that do not match the current version
+          if (!cacheName.includes("workbox")) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
 
 // /* eslint-disable no-restricted-globals */

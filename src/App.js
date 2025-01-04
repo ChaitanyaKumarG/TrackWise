@@ -1,4 +1,4 @@
-import React from "react";
+import React, { } from "react";
 import "./Assets/StyleSheets/App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
@@ -17,21 +17,23 @@ import CreateStudent from "./Pages/Admin/CreateStudent";
 import CreateFaculty from "./Pages/Admin/CreateFaculty";
 import PostNews from "./Pages/Admin/PostNews";
 import StudentProfile from "./Pages/Parent/StudentProfile";
-import Taskbar from "./Components/Common/Navbar";
 import Header from "./Components/Header";
 import BottomNav from "./Components/Common/BottomNav";
 import TimeTable from "./Components/Common/TimeTable";
 import Quiz from "./Components/Common/Quiz";
+import BackButtonHandler from "./Components/Common/BackButtonHandler";
 
 function App() {
+
   return (
     <div style={{ height: "100vh" }}>
       <BrowserRouter>
+      <BackButtonHandler/>
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/timetable" element={<TimeTable />} />
-          <Route path="/quiz" element={<Quiz/>} />
+          <Route path="/quiz" element={<Quiz />} />
           {/*//Parent Routes*/}
           <Route path="/parentlogin" element={<LoginPage />} />
           <Route path="/studentprofile/:penNo" element={<StudentProfile />} />
