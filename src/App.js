@@ -22,6 +22,8 @@ import BottomNav from "./Components/Common/BottomNav";
 import TimeTable from "./Components/Common/TimeTable";
 import Quiz from "./Components/Common/Quiz";
 import BackButtonHandler from "./Components/Common/BackButtonHandler";
+import Attendance from "./Pages/Faculty/PostAttendance";
+import AttendanceReport from "./Pages/Parent/AttendanceReport";
 
 function App() {
 
@@ -38,9 +40,11 @@ function App() {
           <Route path="/parentlogin" element={<LoginPage />} />
           <Route path="/studentprofile/:penNo" element={<StudentProfile />} />
           <Route path="/studentmarks/:StudentID" element={<StudentMarks />} />
+          <Route path="/attendance/:StudentID" element={<AttendanceReport/>}/>
           {/*//Faculty Routes */}
           <Route path="/facultylogin" element={<FLoginPage />} />
           <Route path="/postmarks" element={<PostMarks />} />
+          <Route path="/postattendance" element={<Attendance/>}/>
           {/* //Admin Routes */}
           <Route path="/adminlogin" element={<ALoginPage />} />
           <Route path="/adminhomepage" element={<AHomePage />} />
