@@ -13,6 +13,7 @@
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.7",
     "cra-template-pwa": "2.0.0",
+    "dotenv": "^16.4.7",
     "lucide-react": "^0.469.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.7",

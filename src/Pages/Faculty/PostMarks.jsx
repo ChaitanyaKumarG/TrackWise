@@ -4,6 +4,8 @@ import postMarksService from "../../Services/Faculty/postingMarksServices";
 const SuccessModal = ({ show, onClose }) => {
   if (!show) return null;
 
+  
+
   return (
     <div className="modal d-block" tabIndex="-1" role="dialog">
       <div className="modal-dialog modal-dialog-centered">
