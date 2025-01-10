@@ -34,13 +34,27 @@ const MonthCalendar = ({ month, year, attendanceDates }) => {
     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
       day
     ).padStart(2, "0")}`;
-    return attendanceDates.includes(dateStr);
+    return attendanceDates.some((absentDate) => {
+      const formattedAbsentDate = new Date(absentDate)
+        .toISOString()
+        .split("T")[0];
+      return formattedAbsentDate === dateStr;
+    });
   };
 
   const isWeekend = (index, day) => {
     if (day === null) return false;
     const dayOfWeek = (firstDay + index) % 7;
     return dayOfWeek === 0 || dayOfWeek === 6;
+  };
+
+  const isToday = (day) => {
+    const today = new Date();
+    return (
+      day === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    );
   };
 
   return (
@@ -64,13 +78,7 @@ const MonthCalendar = ({ month, year, attendanceDates }) => {
               ${day === null ? "bg-light" : ""}
               ${isWeekend(index, day) ? "weekend" : ""}
               ${isAbsent(day) ? "absent" : ""}
-              ${
-                day === new Date().getDate() &&
-                month === new Date().getMonth() &&
-                year === new Date().getFullYear()
-                  ? "today"
-                  : ""
-              }
+              ${isToday(day) ? "today" : ""}
             `}
           >
             {day}
@@ -173,7 +181,6 @@ const AttendanceReport = () => {
   }, [StudentID]);
 
   const calculateMonthlyTrend = (data) => {
-    // Group absences by month and calculate attendance rate
     const monthlyData = {};
     data.forEach((record) => {
       const month = new Date(record.Date).getMonth();
@@ -217,7 +224,7 @@ const AttendanceReport = () => {
   }
 
   return (
-    <div className="container-fluid  min-vh-100 homepage-wrapper mt-3 mb-3">
+    <div className="container-fluid min-vh-100 homepage-wrapper mt-3 mb-3">
       {/* Stats Cards */}
       <div className="row mt-1 g-3 mb-4">
         <div className="col-6">
@@ -370,9 +377,11 @@ const AttendanceReport = () => {
         .weekend {
           background-color: #f8f9fa;
         }
+
         .absent {
           background-color: #dc354522;
         }
+
         .today {
           border: 2px solid #0d6efd;
           font-weight: bold;
