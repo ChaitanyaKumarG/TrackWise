@@ -41,7 +41,9 @@ const Attendance = () => {
     const fetchClasses = async () => {
       try {
         setLoading(true);
-        const classRes = await axios.get("http://127.0.0.1:1321/class");
+        const classRes = await axios.get(
+          "https://be-six-sandy.vercel.app/class"
+        );
         setClasses(classRes.data);
       } catch (error) {
         console.error("Error fetching classes:", error);
