@@ -24,6 +24,7 @@ import Quiz from "./Components/Common/Quiz";
 import BackButtonHandler from "./Components/Common/BackButtonHandler";
 import Attendance from "./Pages/Faculty/PostAttendance";
 import AttendanceReport from "./Pages/Parent/AttendanceReport";
+import FHomePage from "./Pages/Faculty/FHomePage";
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           {/*//Faculty Routes */}
           <Route path="/facultylogin" element={<FLoginPage />} />
           <Route path="/postmarks" element={<PostMarks />} />
+          <Route path="/facultyhomepage" element={<FHomePage/>}/>
           <Route path="/postattendance" element={<Attendance/>}/>
           {/* //Admin Routes */}
           <Route path="/adminlogin" element={<ALoginPage />} />

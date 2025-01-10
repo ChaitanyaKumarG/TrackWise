@@ -212,7 +212,7 @@ const AdminPage = () => {
     setShowConfirmModal(false);
 
     axios
-      .post("http://127.0.0.1:1321/studentmarks/approve", { testTypeID })
+      .post("https://be-six-sandy.vercel.app/studentmarks/approve", { testTypeID })
       .then((response) => {
         setMessage("Marks released successfully! ✅");
         setTestTypeID("");

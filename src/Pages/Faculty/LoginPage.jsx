@@ -36,7 +36,7 @@ const FLoginPage = () => {
       setIsLoading(false);
       if (matchedfaculty) {
         console.log(faculty);
-        navigate(`/postmarks`);
+        navigate(`/facultyhomepage`);
       } else {
         setError("Invalid Faculty Key or Password.");
       }
