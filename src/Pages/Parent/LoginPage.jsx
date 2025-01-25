@@ -53,7 +53,7 @@ const LoginPage = () => {
                 className="bi bi-mortarboard-fill text-primary"
                 style={{ fontSize: "3rem" }}
               ></i>
-              <h4 className="mt-3 mb-4 fw-bold">Parent Portal</h4>
+              <h4 className="mt-3 mb-4 fw-bold">Parent Login</h4>
             </div>
 
             <form onSubmit={handleLogin}>

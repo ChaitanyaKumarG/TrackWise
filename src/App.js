@@ -25,6 +25,9 @@ import BackButtonHandler from "./Components/Common/BackButtonHandler";
 import Attendance from "./Pages/Faculty/PostAttendance";
 import AttendanceReport from "./Pages/Parent/AttendanceReport";
 import FHomePage from "./Pages/Faculty/FHomePage";
+import Login from "./Pages/Login";
+import SchoolHomepage from "./Pages/SchoolHomePage";
+
 
 
 function App() {
@@ -36,6 +39,8 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<SchoolHomepage/>}/>
+          <Route path="/login" element={<Login/>}/>
           <Route path="/timetable" element={<TimeTable />} />
           <Route path="/quiz" element={<Quiz />} />
           {/*//Parent Routes*/}

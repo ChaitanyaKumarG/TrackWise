@@ -37,6 +37,12 @@ const BottomNav = () => {
           z-index: 1000;
         }
 
+        @media (min-width: 768px) {
+          .bottom-nav {
+            display: none;
+          }
+        }
+
         .nav-item {
           display: flex;
           flex-direction: column;

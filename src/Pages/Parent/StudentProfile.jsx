@@ -71,7 +71,7 @@ const StudentProfile = () => {
                 <div className="card-body p-2 text-center">
                   <i className="bi bi-mortarboard-fill text-primary fs-4"></i>
                   <div className="small mt-1">Class</div>
-                  <div className="fw-bold small">10th</div>
+                  <div className="fw-bold small">{student.ClassID}</div>
                 </div>
               </div>
             </div>

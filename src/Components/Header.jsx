@@ -1,36 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
 
 const Header = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <header className="app-header">
         <div className="header-content">
           <div className="logo-section">
             <div className="school-logo">TW</div>
-            <h1 className="school-name">TrackWise</h1>
           </div>
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="light"
-              id="dropdown-basic"
-              className="border-0"
-            >
-              {/* <i className="bi bi-three-dots-vertical"></i> */}
-            </Dropdown.Toggle>
 
-            <Dropdown.Menu align="end" className="shadow-sm">
-              <Dropdown.Item as={Link} to="/adminlogin" className="py-2">
-                <i className="bi bi-person-gear me-2"></i>
-                Admin Login
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to="/facultylogin" className="py-2">
-                <i className="bi bi-person-workspace me-2"></i>
-                Faculty Login
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <h1 className="school-name">TrackWise</h1>
+
+          {!isMobile && (
+            <div className="desktop-login-buttons">
+              <Link to="/login" className="btn btn-primary">
+                <i className="bi bi-person-badge me-1"></i>login
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 
@@ -52,12 +51,12 @@ const Header = () => {
           align-items: center;
           padding: 0 1rem;
           height: 100%;
+          position: relative;
         }
 
         .logo-section {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
         }
 
         .school-logo {
@@ -74,18 +73,23 @@ const Header = () => {
         }
 
         .school-name {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
           font-size: 1.25rem;
           font-weight: 600;
           margin: 0;
           color: #2c3e50;
         }
 
-        .menu-button {
-          background: none;
-          border: none;
-          padding: 0.5rem;
-          font-size: 1.25rem;
-          cursor: pointer;
+        .desktop-login-buttons {
+          display: flex;
+          align-items: center;
+        }
+
+        .desktop-login-buttons .btn {
+          display: flex;
+          align-items: center;
         }
       `}</style>
     </>
