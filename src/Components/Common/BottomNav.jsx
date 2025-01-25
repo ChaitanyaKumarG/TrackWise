@@ -5,7 +5,7 @@ const BottomNav = () => {
   return (
     <>
       <nav className="bottom-nav">
-        <Link to="/" className="nav-item">
+        <Link to="/home" className="nav-item">
           <i className="bi bi-house-fill"></i>
           <span>Home</span>
         </Link>

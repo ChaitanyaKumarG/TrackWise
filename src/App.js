@@ -1,6 +1,6 @@
 import React, { } from "react";
 import "./Assets/StyleSheets/App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/Parent/LoginPage";
 import StudentMarks from "./Pages/Parent/StudentMarks";
@@ -30,29 +30,33 @@ import SchoolHomepage from "./Pages/SchoolHomePage";
 
 
 
-function App() {
+function Appcontent() {
+
+  const location = useLocation();
+  const hidebottamnav = [
+    "/",
+  ];
 
   return (
     <div style={{ height: "100vh" }}>
-      <BrowserRouter>
-      <BackButtonHandler/>
+        <BackButtonHandler />
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<SchoolHomepage/>}/>
-          <Route path="/login" element={<Login/>}/>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<SchoolHomepage />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/timetable" element={<TimeTable />} />
           <Route path="/quiz" element={<Quiz />} />
           {/*//Parent Routes*/}
           <Route path="/parentlogin" element={<LoginPage />} />
           <Route path="/studentprofile/:penNo" element={<StudentProfile />} />
           <Route path="/studentmarks/:StudentID" element={<StudentMarks />} />
-          <Route path="/attendance/:StudentID" element={<AttendanceReport/>}/>
+          <Route path="/attendance/:StudentID" element={<AttendanceReport />} />
           {/*//Faculty Routes */}
           <Route path="/facultylogin" element={<FLoginPage />} />
           <Route path="/postmarks" element={<PostMarks />} />
-          <Route path="/facultyhomepage" element={<FHomePage/>}/>
-          <Route path="/postattendance" element={<Attendance/>}/>
+          <Route path="/facultyhomepage" element={<FHomePage />} />
+          <Route path="/postattendance" element={<Attendance />} />
           {/* //Admin Routes */}
           <Route path="/adminlogin" element={<ALoginPage />} />
           <Route path="/adminhomepage" element={<AHomePage />} />
@@ -66,9 +70,18 @@ function App() {
           <Route path="/releasemarks" element={<ReleaseMarks />} />
         </Routes>
 
-        <BottomNav />
-      </BrowserRouter>
+        {hidebottamnav.includes(location.pathname) ? null : <BottomNav />}
+
     </div>
   );
 }
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Appcontent />
+    </BrowserRouter>
+  );
+}
+
 export default App;

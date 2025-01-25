@@ -18,17 +18,16 @@ function FHomePage() {
       description: "Enter and update student marks",
       path: "/postmarks",
       color: "warning",
-    }
+    },
   ];
 
   const groupedOptions = {
     "Post Data": options.slice(0, 2),
-
   };
 
   return (
-    <div className="container-fluid min-vh-100 homepage-wrapper">
-      <div className="card shadow-sm mb-4 mt-5">
+    <div className="container-fluid min-vh-100 homepage-wrapper px-3 px-md-4 px-lg-5">
+      <div className="card shadow-sm mb-4 mt-4 mt-md-5">
         <div className="card-body text-center p-4">
           <i className="bi bi-database-fill fs-1 text-primary mb-2"></i>
           <h1 className="h3 mb-1">Faculty Dashboard</h1>
@@ -40,7 +39,7 @@ function FHomePage() {
           <h2 className="h5 mb-3">{groupTitle}</h2>
           <div className="row g-3">
             {groupOptions.map((option, index) => (
-              <div className="col-12 col-md-6" key={index}>
+              <div className="col-12 col-md-6 col-lg-4" key={index}>
                 <div
                   className={`card shadow-sm border-${option.color} h-100 hover-shadow`}
                   onClick={() => navigate(option.path)}

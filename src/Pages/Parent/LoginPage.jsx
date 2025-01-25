@@ -39,13 +39,16 @@ const LoginPage = () => {
       } else {
         setError("Invalid Pen Number or Parent Phone Number.");
       }
-    }, 800); // Added slight delay for loading effect
+    }, 800);
   };
 
   return (
     <div className="d-flex align-items-center justify-content-center bg-light min-vh-100 homepage-wrapper">
-      <div className="container px-4">
-        <div className="card border-0 shadow-sm">
+      <div className="container px-4 px-sm-2">
+        <div
+          className="card border-0 shadow-sm mx-auto"
+          style={{ maxWidth: "500px" }}
+        >
           <div className="card-body p-4">
             {/* Logo/Icon Section */}
             <div className="text-center mb-4">

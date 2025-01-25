@@ -36,7 +36,7 @@ const AHomePage = () => {
   ];
 
   return (
-    <div className="container-fluid homepage-wrapper min-vh-100">
+    <div className="homepage-wrapper min-vh-100 px-3 px-md-4 px-lg-5 py-lg-4 mt-lg-5">
       <div className="card shadow-sm mb-4">
         <div className="card-body text-center p-4">
           <i className="bi bi-shield-lock fs-1 text-primary mb-2"></i>
@@ -44,9 +44,9 @@ const AHomePage = () => {
         </div>
       </div>
 
-      <div className="row g-3">
+      <div className="row g-3 g-lg-4">
         {menuItems.map((item, index) => (
-          <div className="col-12" key={index}>
+          <div className="col-12 col-md-6 col-lg-3" key={index}>
             <div
               className={`card shadow-sm border-${item.color} h-100 hover-shadow`}
               onClick={() => navigate(item.path)}
@@ -85,6 +85,11 @@ const AHomePage = () => {
             .hover-shadow:hover {
               transform: translateY(-2px);
               box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+            }
+          }
+          @media (min-width: 992px) {
+            .homepage-wrapper {
+              margin: 0 auto;
             }
           }
         `}

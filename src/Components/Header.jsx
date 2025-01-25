@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -12,6 +13,10 @@ const Header = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleMobileLogin = () => {
+    navigate("/login");
+  };
 
   return (
     <>
@@ -28,6 +33,14 @@ const Header = () => {
               <Link to="/login" className="btn btn-primary">
                 <i className="bi bi-person-badge me-1"></i>login
               </Link>
+            </div>
+          )}
+
+          {isMobile && (
+            <div className="mobile-login-section">
+              <button className="mobile-login-icon" onClick={handleMobileLogin}>
+                <i className="bi bi-person-badge"></i>
+              </button>
             </div>
           )}
         </div>
@@ -90,6 +103,18 @@ const Header = () => {
         .desktop-login-buttons .btn {
           display: flex;
           align-items: center;
+        }
+
+        .mobile-login-section {
+          position: relative;
+        }
+
+        .mobile-login-icon {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          color: #2c3e50;
+          padding: 0.25rem;
         }
       `}</style>
     </>

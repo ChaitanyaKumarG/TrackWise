@@ -212,7 +212,9 @@ const AdminPage = () => {
     setShowConfirmModal(false);
 
     axios
-      .post("https://be-six-sandy.vercel.app/studentmarks/approve", { testTypeID })
+      .post("https://be-six-sandy.vercel.app/studentmarks/approve", {
+        testTypeID,
+      })
       .then((response) => {
         setMessage("Marks released successfully! ✅");
         setTestTypeID("");
@@ -230,117 +232,121 @@ const AdminPage = () => {
 
   return (
     <div className="min-vh-100 homepage-wrapper bg-light">
-      <div className="container-fluid px-3 py-4">
-        <div className="card border-0 shadow-sm">
-          <div className="card-header bg-primary text-white border-0">
-            <h1 className="h4 mb-0 py-2 text-center">
-              <i className="bi bi-unlock-fill me-2"></i>
-              Release Marks
-            </h1>
-          </div>
-
-          <div className="card-body p-4">
-            <div className="form-group mb-4">
-              <label htmlFor="testType" className="form-label fw-bold mb-3">
-                <i className="bi bi-list-check me-2"></i>
-                Select Test Type
-              </label>
-              <select
-                className="form-select form-select-lg shadow-sm"
-                id="testType"
-                value={testTypeID}
-                onChange={handleTestTypeChange}
-              >
-                <option value="">-- Select Test Type --</option>
-                {testTypes.map((type) => (
-                  <option key={type.id} value={type.id}>
-                    {type.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="d-grid gap-2">
-              <button
-                className="btn btn-primary btn-lg"
-                onClick={handleConfirmClick}
-                disabled={loading || !testTypeID}
-              >
-                {loading ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                    Releasing...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-check-circle-fill me-2"></i>
-                    Release Marks
-                  </>
-                )}
-              </button>
-            </div>
-
-            {message && (
-              <div
-                className={`alert ${
-                  message.includes("successfully")
-                    ? "alert-success"
-                    : "alert-danger"
-                } mt-4 animate-alert`}
-                role="alert"
-              >
-                <i
-                  className={`bi ${
-                    message.includes("successfully")
-                      ? "bi-check-circle"
-                      : "bi-exclamation-circle"
-                  } me-2`}
-                ></i>
-                {message}
+      <div className="container-fluid py-4">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div className="card border-0 shadow-sm">
+              <div className="card-header bg-primary text-white border-0">
+                <h1 className="h4 mb-0 py-2 text-center">
+                  <i className="bi bi-unlock-fill me-2"></i>
+                  Release Marks
+                </h1>
               </div>
+
+              <div className="card-body p-4">
+                <div className="form-group mb-4">
+                  <label htmlFor="testType" className="form-label fw-bold mb-3">
+                    <i className="bi bi-list-check me-2"></i>
+                    Select Test Type
+                  </label>
+                  <select
+                    className="form-select form-select-lg shadow-sm"
+                    id="testType"
+                    value={testTypeID}
+                    onChange={handleTestTypeChange}
+                  >
+                    <option value="">-- Select Test Type --</option>
+                    {testTypes.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="d-grid gap-2">
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleConfirmClick}
+                    disabled={loading || !testTypeID}
+                  >
+                    {loading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        Releasing...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-check-circle-fill me-2"></i>
+                        Release Marks
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {message && (
+                  <div
+                    className={`alert ${
+                      message.includes("successfully")
+                        ? "alert-success"
+                        : "alert-danger"
+                    } mt-4 animate-alert`}
+                    role="alert"
+                  >
+                    <i
+                      className={`bi ${
+                        message.includes("successfully")
+                          ? "bi-check-circle"
+                          : "bi-exclamation-circle"
+                      } me-2`}
+                    ></i>
+                    {message}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Confirmation Modal */}
+            {showConfirmModal && (
+              <>
+                <div className="confirmation-modal">
+                  <div className="confirmation-content">
+                    <div className="text-center mb-4">
+                      <i className="bi bi-exclamation-circle text-warning display-4"></i>
+                      <h5 className="mt-3">Confirm Release</h5>
+                      <p className="mb-4">
+                        Are you sure you want to release marks for{" "}
+                        <strong>{selectedTest?.name}</strong>?
+                      </p>
+                    </div>
+                    <div className="d-flex gap-2 justify-content-center">
+                      <button
+                        className="btn btn-outline-secondary px-4"
+                        onClick={() => setShowConfirmModal(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="btn btn-primary px-4"
+                        onClick={handleReleaseMarks}
+                      >
+                        Confirm
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="modal-backdrop"
+                  onClick={() => setShowConfirmModal(false)}
+                ></div>
+              </>
             )}
           </div>
         </div>
-
-        {/* Fixed Confirmation Modal */}
-        {showConfirmModal && (
-          <>
-            <div className="confirmation-modal">
-              <div className="confirmation-content">
-                <div className="text-center mb-4">
-                  <i className="bi bi-exclamation-circle text-warning display-4"></i>
-                  <h5 className="mt-3">Confirm Release</h5>
-                  <p className="mb-4">
-                    Are you sure you want to release marks for{" "}
-                    <strong>{selectedTest?.name}</strong>?
-                  </p>
-                </div>
-                <div className="d-flex gap-2 justify-content-center">
-                  <button
-                    className="btn btn-outline-secondary px-4"
-                    onClick={() => setShowConfirmModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="btn btn-primary px-4"
-                    onClick={handleReleaseMarks}
-                  >
-                    Confirm
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              className="modal-backdrop"
-              onClick={() => setShowConfirmModal(false)}
-            ></div>
-          </>
-        )}
       </div>
 
       <style jsx>{`
@@ -444,7 +450,7 @@ const AdminPage = () => {
           }
         }
 
-        /* Mobile Optimizations */
+        /* Mobile and Desktop Responsiveness */
         @media (max-width: 576px) {
           .container-fluid {
             padding: 1rem;

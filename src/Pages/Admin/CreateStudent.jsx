@@ -165,134 +165,142 @@ function CreateStudent() {
   ];
 
   return (
-    <div className="container-fluid min-vh-100 homepage-wrapper">
-      <div className="card border-0 mt-5 shadow-sm">
-        <div className="card-body p-3">
-          {/* Progress Bar */}
-          <div className="progress mb-4" style={{ height: "3px" }}>
-            <div
-              className="progress-bar"
-              role="progressbar"
-              style={{ width: `${(step / formSections.length) * 100}%` }}
-            />
-          </div>
+    <div className="container-fluid py-4 px-lg-5">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body p-4 p-md-5">
+              {/* Progress Bar */}
+              <div className="progress mb-4" style={{ height: "4px" }}>
+                <div
+                  className="progress-bar"
+                  role="progressbar"
+                  style={{ width: `${(step / formSections.length) * 100}%` }}
+                />
+              </div>
 
-          {/* Header */}
-          <div className="text-center mb-4">
-            <i className="bi bi-person-plus-fill text-primary fs-1"></i>
-            <h4 className="mt-2">{formSections[step - 1].title}</h4>
-            <small className="text-muted">
-              Step {step} of {formSections.length}
-            </small>
-          </div>
+              {/* Header */}
+              <div className="text-center mb-4">
+                <i className="bi bi-person-plus-fill text-primary fs-1"></i>
+                <h4 className="mt-2 mb-1">{formSections[step - 1].title}</h4>
+                <small className="text-muted">
+                  Step {step} of {formSections.length}
+                </small>
+              </div>
 
-          {/* Alerts */}
-          {success && (
-            <div className="alert alert-success d-flex align-items-center mb-3">
-              <i className="bi bi-check-circle-fill me-2"></i>
-              <div>{success}</div>
-            </div>
-          )}
-          {error && (
-            <div className="alert alert-danger d-flex align-items-center mb-3">
-              <i className="bi bi-exclamation-triangle-fill me-2"></i>
-              <div>{error}</div>
-            </div>
-          )}
+              {/* Alerts */}
+              {success && (
+                <div className="alert alert-success d-flex align-items-center mb-4">
+                  <i className="bi bi-check-circle-fill me-2"></i>
+                  <div>{success}</div>
+                </div>
+              )}
+              {error && (
+                <div className="alert alert-danger d-flex align-items-center mb-4">
+                  <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                  <div>{error}</div>
+                </div>
+              )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} noValidate>
-            {formSections[step - 1].fields.map((field) => (
-              <div className="mb-3" key={field.name}>
-                <label className="form-label small fw-bold">
-                  {field.label}
-                </label>
-                <div className="input-group">
-                  <span className="input-group-text bg-light border-end-0">
-                    <i className={`bi ${field.icon}`}></i>
-                  </span>
-                  {field.type === "select" ? (
-                    <select
-                      name={field.name}
-                      className="form-select border-start-0"
-                      value={formData[field.name]}
-                      onChange={handleInputChange}
-                      required
+              {/* Form */}
+              <form onSubmit={handleSubmit} noValidate>
+                <div className="row g-3">
+                  {formSections[step - 1].fields.map((field) => (
+                    <div className="col-12 col-md-6" key={field.name}>
+                      <div className="mb-3">
+                        <label className="form-label small fw-bold">
+                          {field.label}
+                        </label>
+                        <div className="input-group">
+                          <span className="input-group-text bg-light border-end-0">
+                            <i className={`bi ${field.icon}`}></i>
+                          </span>
+                          {field.type === "select" ? (
+                            <select
+                              name={field.name}
+                              className="form-select border-start-0"
+                              value={formData[field.name]}
+                              onChange={handleInputChange}
+                              required
+                            >
+                              <option value="">Select {field.label}</option>
+                              {field.options.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          ) : field.type === "textarea" ? (
+                            <textarea
+                              name={field.name}
+                              className="form-control border-start-0"
+                              placeholder={field.placeholder}
+                              value={formData[field.name]}
+                              onChange={handleInputChange}
+                              rows="3"
+                            />
+                          ) : (
+                            <input
+                              type={field.type}
+                              name={field.name}
+                              className="form-control border-start-0"
+                              placeholder={field.placeholder}
+                              value={formData[field.name]}
+                              onChange={handleInputChange}
+                              required
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="d-flex gap-3 mt-4">
+                  {step > 1 && (
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary flex-grow-1"
+                      onClick={() => setStep(step - 1)}
                     >
-                      <option value="">Select {field.label}</option>
-                      {field.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : field.type === "textarea" ? (
-                    <textarea
-                      name={field.name}
-                      className="form-control border-start-0"
-                      placeholder={field.placeholder}
-                      value={formData[field.name]}
-                      onChange={handleInputChange}
-                      rows="3"
-                    />
-                  ) : (
-                    <input
-                      type={field.type}
-                      name={field.name}
-                      className="form-control border-start-0"
-                      placeholder={field.placeholder}
-                      value={formData[field.name]}
-                      onChange={handleInputChange}
-                      required
-                    />
+                      <i className="bi bi-arrow-left me-2"></i>
+                      Previous
+                    </button>
+                  )}
+                  {step < formSections.length && (
+                    <button
+                      type="button"
+                      className="btn btn-primary flex-grow-1"
+                      onClick={() => setStep(step + 1)}
+                    >
+                      Next
+                      <i className="bi bi-arrow-right ms-2"></i>
+                    </button>
+                  )}
+                  {step === formSections.length && (
+                    <button
+                      type="submit"
+                      className="btn btn-success flex-grow-1"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" />
+                          Registering...
+                        </>
+                      ) : (
+                        <>
+                          <i className="bi bi-check-circle me-2"></i>
+                          Register Student
+                        </>
+                      )}
+                    </button>
                   )}
                 </div>
-              </div>
-            ))}
-
-            {/* Navigation Buttons */}
-            <div className="d-flex gap-2 mt-4">
-              {step > 1 && (
-                <button
-                  type="button"
-                  className="btn btn-outline-primary flex-grow-1"
-                  onClick={() => setStep(step - 1)}
-                >
-                  <i className="bi bi-arrow-left me-2"></i>
-                  Previous
-                </button>
-              )}
-              {step < formSections.length && (
-                <button
-                  type="button"
-                  className="btn btn-primary flex-grow-1"
-                  onClick={() => setStep(step + 1)}
-                >
-                  Next
-                  <i className="bi bi-arrow-right ms-2"></i>
-                </button>
-              )}
-              {step === formSections.length && (
-                <button
-                  type="submit"
-                  className="btn btn-success flex-grow-1"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2" />
-                      Registering...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-check-circle me-2"></i>
-                      Register Student
-                    </>
-                  )}
-                </button>
-              )}
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
