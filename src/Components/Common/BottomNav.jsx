@@ -5,7 +5,7 @@ const BottomNav = () => {
   return (
     <>
       <nav className="bottom-nav">
-        <Link to="/" className="nav-item">
+        <Link to="/home" className="nav-item">
           <i className="bi bi-house-fill"></i>
           <span>Home</span>
         </Link>
@@ -35,6 +35,12 @@ const BottomNav = () => {
           padding: 0.5rem 0;
           box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
           z-index: 1000;
+        }
+
+        @media (min-width: 768px) {
+          .bottom-nav {
+            display: none;
+          }
         }
 
         .nav-item {

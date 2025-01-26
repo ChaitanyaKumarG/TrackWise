@@ -140,110 +140,116 @@ const Attendance = () => {
   }
 
   return (
-    <div className="container-fluid min-vh-100 homepage-wrapper">
-      {!showStudents ? (
-        <div className="card shadow-sm mt-5">
-          <div className="card-header bg-primary text-white py-3">
-            <h4 className="mb-0 text-center">
-              <i className="bi bi-check-circle me-2"></i>
-              Mark Absent Students
-            </h4>
-          </div>
-          <div className="card-body p-4">
-            <div className="mb-4">
-              <label className="form-label">
-                <i className="bi bi-mortarboard me-2"></i>Class
-              </label>
-              <select
-                className="form-select form-select-lg mb-3"
-                name="selectedClass"
-                value={selectedClass}
-                onChange={handleClassChange}
-              >
-                <option value="">Select Class</option>
-                {classes.map((cls) => (
-                  <option key={cls.ClassID} value={cls.ClassID}>
-                    {cls.ClassStandard}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <div className="container-fluid px-lg-5 min-vh-100 homepage-wrapper">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          {!showStudents ? (
+            <div className="card shadow-sm mt-5">
+              <div className="card-header bg-primary text-white py-3">
+                <h4 className="mb-0 text-center">
+                  <i className="bi bi-check-circle me-2"></i>
+                  Mark Absent Students
+                </h4>
+              </div>
+              <div className="card-body p-4">
+                <div className="mb-4">
+                  <label className="form-label">
+                    <i className="bi bi-mortarboard me-2"></i>Class
+                  </label>
+                  <select
+                    className="form-select form-select-lg mb-3"
+                    name="selectedClass"
+                    value={selectedClass}
+                    onChange={handleClassChange}
+                  >
+                    <option value="">Select Class</option>
+                    {classes.map((cls) => (
+                      <option key={cls.ClassID} value={cls.ClassID}>
+                        {cls.ClassStandard}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            <button
-              className="btn btn-primary btn-lg w-100"
-              onClick={handleProceed}
-              disabled={!selectedClass}
-            >
-              <i className="bi bi-arrow-right-circle me-2"></i>
-              Proceed to Mark Absent Students
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="card shadow-sm">
-          <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
-            <button
-              className="btn btn-link text-white p-0"
-              onClick={() => setShowStudents(false)}
-            >
-              <i className="bi bi-arrow-left-circle fs-4"></i>
-            </button>
-            <h4 className="mb-0">Mark Absent Students</h4>
-            <div style={{ width: "24px" }}></div>
-          </div>
-          <div className="card-body p-0">
-            <div className="alert alert-info m-3">
-              <i className="bi bi-info-circle me-2"></i>
-              Check the box to mark a student as absent. Only absent records
-              will be stored.
+                <button
+                  className="btn btn-primary btn-lg w-100"
+                  onClick={handleProceed}
+                  disabled={!selectedClass}
+                >
+                  <i className="bi bi-arrow-right-circle me-2"></i>
+                  Proceed to Mark Absent Students
+                </button>
+              </div>
             </div>
-            <div className="table-responsive">
-              <table className="table table-bordered mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th className="text-center">#</th>
-                    <th>Name</th>
-                    <th className="text-center">Absent</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((student, index) => (
-                    <tr key={student.StudentID}>
-                      <td className="text-center">{index + 1}</td>
-                      <td>{student.StudentName}</td>
-                      <td className="text-center">
-                        <div className="form-check d-flex justify-content-center">
-                          <input
-                            type="checkbox"
-                            className="form-check-input"
-                            checked={absentStudents.includes(student.StudentID)}
-                            onChange={(e) =>
-                              handleAttendanceChange(
-                                student.StudentID,
-                                e.target.checked
-                              )
-                            }
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          ) : (
+            <div className="card shadow-sm">
+              <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                <button
+                  className="btn btn-link text-white p-0"
+                  onClick={() => setShowStudents(false)}
+                >
+                  <i className="bi bi-arrow-left-circle fs-4"></i>
+                </button>
+                <h4 className="mb-0">Mark Absent Students</h4>
+                <div style={{ width: "24px" }}></div>
+              </div>
+              <div className="card-body p-0">
+                <div className="alert alert-info m-3">
+                  <i className="bi bi-info-circle me-2"></i>
+                  Check the box to mark a student as absent. Only absent records
+                  will be stored.
+                </div>
+                <div className="table-responsive">
+                  <table className="table table-hover table-striped mb-0">
+                    <thead className="table-light sticky-top">
+                      <tr>
+                        <th className="text-center">#</th>
+                        <th>Name</th>
+                        <th className="text-center">Absent</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {students.map((student, index) => (
+                        <tr key={student.StudentID}>
+                          <td className="text-center">{index + 1}</td>
+                          <td>{student.StudentName}</td>
+                          <td className="text-center">
+                            <div className="form-check d-flex justify-content-center">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                checked={absentStudents.includes(
+                                  student.StudentID
+                                )}
+                                onChange={(e) =>
+                                  handleAttendanceChange(
+                                    student.StudentID,
+                                    e.target.checked
+                                  )
+                                }
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="card-footer p-3">
+                <button
+                  className="btn btn-primary btn-lg w-100"
+                  onClick={handleSubmit}
+                  disabled={absentStudents.length === 0}
+                >
+                  <i className="bi bi-save me-2"></i>
+                  Submit Absent Records
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="card-footer p-3">
-            <button
-              className="btn btn-primary btn-lg w-100"
-              onClick={handleSubmit}
-              disabled={absentStudents.length === 0}
-            >
-              <i className="bi bi-save me-2"></i>
-              Submit Absent Records
-            </button>
-          </div>
+          )}
         </div>
-      )}
+      </div>
       <SuccessModal show={showSuccessModal} onClose={handleModalClose} />
     </div>
   );

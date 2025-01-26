@@ -39,7 +39,6 @@ const Homepage = () => {
 
   return (
     <div className="homepage-wrapper min-vh-100">
-
       <div className="container py-4 main-content">
         <div className="greeting-section mb-4">
           <h1 className="display-5 fw-bold greeting-text">
@@ -86,7 +85,6 @@ const Homepage = () => {
         </div>
       </div>
 
-
       <style jsx>{`
         .homepage-wrapper {
           background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -95,6 +93,8 @@ const Homepage = () => {
         }
 
         .main-content {
+          max-width: 1200px;
+          margin: 0 auto;
           margin-bottom: 70px;
         }
 
@@ -107,35 +107,54 @@ const Homepage = () => {
           color: #2c3e50;
           text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
           animation: fadeIn 0.5s ease-out;
+          font-size: 3rem;
         }
 
         .news-grid {
           display: grid;
-          gap: 1rem;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.5rem;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        }
+
+        .news-card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .news-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
         }
 
         .cursor {
           display: inline-block;
-          width: 3px;
-          height: 1em;
+          width: 4px;
+          height: 1.2em;
           background-color: #2c3e50;
-          margin-left: 4px;
+          margin-left: 6px;
           animation: blink 1s infinite;
           vertical-align: middle;
         }
 
         .icon-circle {
-          width: 48px;
-          height: 48px;
+          width: 60px;
+          height: 60px;
           border-radius: 50%;
           background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
           display: flex;
           align-items: center;
           justify-content: center;
           color: white;
-          font-size: 1.25rem;
-          box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1);
+          font-size: 1.5rem;
+          box-shadow: 0 6px 10px rgba(0, 123, 255, 0.2);
+          transition: transform 0.3s ease;
+        }
+
+        .news-card:hover .icon-circle {
+          transform: scale(1.05);
+        }
+
+        .card-body {
+          padding: 1.5rem;
         }
 
         @media (max-width: 768px) {

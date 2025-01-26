@@ -109,7 +109,6 @@ const StudentMarks = () => {
     return { grade: "F", color: "danger" };
   };
 
-  // Prepare data for pie chart
   const prepareSubjectPerformance = () => {
     const subjectTotals = {};
     marks.forEach((mark) => {
@@ -145,7 +144,6 @@ const StudentMarks = () => {
     };
   };
 
-  // Prepare data for bar chart
   const prepareSubjectTrends = () => {
     const activeMarks = groupedMarks[activeTest] || [];
     return {
@@ -237,114 +235,119 @@ const StudentMarks = () => {
         </div>
       </div>
 
-      {/* Overall Performance Pie Chart */}
-      <div className="px-3 mb-3">
-        <div className="card shadow-sm">
-          <div className="card-body">
-            <h6 className="card-title d-flex align-items-center mb-3">
-              <i className="bi bi-pie-chart-fill text-primary me-2"></i>
-              Overall Performance
-            </h6>
-            <div style={{ height: "300px" }}>
-              <Pie
-                data={prepareSubjectPerformance()}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      position: "bottom",
-                      labels: {
-                        boxWidth: 12,
-                        padding: 15,
+      {/* Charts and Performance Sections */}
+      <div className="row g-3 px-3">
+        {/* Overall Performance Pie Chart */}
+        <div className="col-12 col-md-6">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h6 className="card-title d-flex align-items-center mb-3">
+                <i className="bi bi-pie-chart-fill text-primary me-2"></i>
+                Overall Performance
+              </h6>
+              <div style={{ height: "250px" }}>
+                <Pie
+                  data={prepareSubjectPerformance()}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: "bottom",
+                        labels: {
+                          boxWidth: 12,
+                          padding: 15,
+                        },
                       },
                     },
-                  },
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Quick Stats Cards */}
-      <div className="px-3 mt-3 mb-3">
-        <div className="card shadow-sm">
-          <div className="card-body">
-            <h6 className="card-title d-flex align-items-center">
-              <i className="bi bi-graph-up text-primary me-2"></i>
-              Performance Summary
-            </h6>
-            <div className="row g-3 mt-2">
-              {groupedMarks[activeTest]?.length > 0 && (
-                <>
-                  <div className="col-6">
-                    <div className="border rounded p-3 text-center">
-                      <div className="text-muted small">Average Score</div>
-                      <div className="h4 mb-0">
-                        {(
-                          groupedMarks[activeTest].reduce(
-                            (acc, curr) =>
-                              acc +
-                              (curr.MarksObtained / maxMarks[activeTest]) * 100,
-                            0
-                          ) / groupedMarks[activeTest].length
-                        ).toFixed(1)}
-                        %
+        {/* Quick Stats */}
+        <div className="col-12 col-md-6">
+          <div className="card shadow-sm h-100">
+            <div className="card-body">
+              <h6 className="card-title d-flex align-items-center">
+                <i className="bi bi-graph-up text-primary me-2"></i>
+                Performance Summary
+              </h6>
+              <div className="row g-3 mt-2">
+                {groupedMarks[activeTest]?.length > 0 && (
+                  <>
+                    <div className="col-6">
+                      <div className="border rounded p-3 text-center">
+                        <div className="text-muted small">Average Score</div>
+                        <div className="h4 mb-0">
+                          {(
+                            groupedMarks[activeTest].reduce(
+                              (acc, curr) =>
+                                acc +
+                                (curr.MarksObtained / maxMarks[activeTest]) *
+                                  100,
+                              0
+                            ) / groupedMarks[activeTest].length
+                          ).toFixed(1)}
+                          %
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="border rounded p-3 text-center">
-                      <div className="text-muted small">Highest Score</div>
-                      <div className="h4 mb-0">
-                        {Math.max(
-                          ...groupedMarks[activeTest].map(
-                            (mark) =>
-                              (mark.MarksObtained / maxMarks[activeTest]) * 100
-                          )
-                        ).toFixed(1)}
-                        %
+                    <div className="col-6">
+                      <div className="border rounded p-3 text-center">
+                        <div className="text-muted small">Highest Score</div>
+                        <div className="h4 mb-0">
+                          {Math.max(
+                            ...groupedMarks[activeTest].map(
+                              (mark) =>
+                                (mark.MarksObtained / maxMarks[activeTest]) *
+                                100
+                            )
+                          ).toFixed(1)}
+                          %
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Performance Charts */}
-      <div className="px-3 mb-4">
-        <div className="card shadow-sm">
-          <div className="card-body">
-            <h6 className="card-title d-flex align-items-center mb-3">
-              <i className="bi bi-graph-up text-primary me-2"></i>
-              Subject Performance
-            </h6>
-            <div style={{ height: "300px" }}>
-              <Bar
-                data={prepareSubjectTrends()}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      max: 100,
-                      ticks: {
-                        callback: (value) => `${value}%`,
+        {/* Performance Bar Chart */}
+        <div className="col-12">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h6 className="card-title d-flex align-items-center mb-3">
+                <i className="bi bi-graph-up text-primary me-2"></i>
+                Subject Performance
+              </h6>
+              <div style={{ height: "300px" }}>
+                <Bar
+                  data={prepareSubjectTrends()}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        display: false,
                       },
                     },
-                  },
-                }}
-              />
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                          callback: (value) => `${value}%`,
+                        },
+                      },
+                    },
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -55,9 +55,9 @@ function StudentData() {
   );
 
   return (
-    <div className="container-fluid min-vh-100 homepage-wrapper">
+    <div className="mt-5 mb-5 min-vh-100 homepage-wrapper px-3 px-md-4 px-lg-5 py-4">
       {/* Header Section */}
-      <div className="card border-0 shadow-sm mb-4 mt-5">
+      <div className="card border-0 shadow-sm mb-4">
         <div className="card-body">
           <h2 className="h4 mb-4">
             <i className="bi bi-mortarboard-fill me-2"></i>
@@ -128,7 +128,7 @@ function StudentData() {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           {filteredStudents.map((student) => (
             <div key={student.PENNumber} className="col">
-              <div className="card h-100 border-0 shadow-sm">
+              <div className="card h-100 border-0 shadow-sm hover-shadow">
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-3">
                     <div className="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
@@ -199,6 +199,18 @@ function StudentData() {
           </p>
         </div>
       )}
+
+      <style>
+        {`
+          .hover-shadow {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+          }
+          .hover-shadow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+          }
+        `}
+      </style>
     </div>
   );
 }

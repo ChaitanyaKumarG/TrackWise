@@ -9,20 +9,18 @@
 // export default config;
 
 
-import type { CapacitorConfig } from '@capacitor/cli';
-
-const config: CapacitorConfig = {
+const config = {
   appId: 'com.trackwise.www',
   appName: 'TrackWise',
   webDir: 'build',
   server: {
     // For development
     url: 'https://track-wise-ten.vercel.app',
-    cleartext: true
+    cleartext: true,
   },
   android: {
-    allowMixedContent: true
-  }
+    allowMixedContent: true,
+  },
 };
 
 export default config;
