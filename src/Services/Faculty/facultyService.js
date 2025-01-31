@@ -11,4 +11,12 @@ export const createFaculty = async(facultyData)=>{
   const response = await axios.post(`${BASE_URL}/faculty`, facultyData)
   return response.data
 
+};
+
+export const deleteFaculty = async(id) =>{
+  await axios.delete(`${BASE_URL}/faculty/${id}`);
+};
+
+export const updateFaculty = async (id, facultyData) =>{
+  await axios.put(`${BASE_URL}/faculty/${id}`, facultyData);
 }

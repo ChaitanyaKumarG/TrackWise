@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllFaculty } from "../../Services/Faculty/facultyService";
+import {
+  fetchAllFaculty,
+  deleteFaculty,
+  updateFaculty,
+} from "../../Services/Faculty/facultyService";
 
 function FacultyData() {
   const [faculty, setFaculty] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingFaculty, setEditingFaculty] = useState(null);
+  const [updatedFaculty, setUpdatedFaculty] = useState({
+    Name: "",
+    Email: "",
+    FacultyKey: "",
+    Password: "",
+  });
 
   useEffect(() => {
     const fetchFacultyData = async () => {
@@ -20,6 +31,41 @@ function FacultyData() {
     };
     fetchFacultyData();
   }, []);
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this faculty?")) {
+      try {
+        await deleteFaculty(id);
+        setFaculty(faculty.filter((fac) => fac.FacultyID !== id));
+      } catch (err) {
+        alert("Failed to delete faculty.");
+      }
+    }
+  };
+
+  const handleEdit = (fac) => {
+    setEditingFaculty(fac.FacultyID);
+    setUpdatedFaculty({
+      Name: fac.Name,
+      Email: fac.Email,
+      FacultyKey: fac.FacultyKey,
+      Password: fac.Password,
+    });
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await updateFaculty(editingFaculty, updatedFaculty);
+      setFaculty(
+        faculty.map((fac) =>
+          fac.FacultyID === editingFaculty ? { ...fac, ...updatedFaculty } : fac
+        )
+      );
+      setEditingFaculty(null);
+    } catch (err) {
+      alert("Failed to update faculty.");
+    }
+  };
 
   const filteredFaculty = faculty.filter(
     (fac) =>
@@ -55,9 +101,8 @@ function FacultyData() {
   }
 
   return (
-    <div className="container-fluid min-vh-100 homepage-wrapper px-3 px-md-4 px-lg-5 py-4">
-      {/* Header Section */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container-fluid min-vh-100 homepage-wrapper">
+      <div className="d-flex justify-content-between align-items-center mb-4 mt-4">
         <h2 className="h4 mb-0">
           <i className="bi bi-people-fill me-2"></i>
           Faculty Directory
@@ -67,7 +112,6 @@ function FacultyData() {
         </span>
       </div>
 
-      {/* Search Box */}
       <div className="mb-4">
         <div className="input-group">
           <span className="input-group-text bg-light border-end-0">
@@ -83,66 +127,75 @@ function FacultyData() {
         </div>
       </div>
 
-      {/* Faculty Cards */}
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 border">
         {filteredFaculty.map((fac) => (
           <div key={fac.FacultyID} className="col">
-            <div className="card h-100 border-0 shadow-sm hover-shadow">
+            <div className="card h-100 border-0 shadow-sm">
               <div className="card-body">
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                    <i className="bi bi-person-workspace text-primary"></i>
-                  </div>
-                  <div>
+                {editingFaculty === fac.FacultyID ? (
+                  <>
+                    <input
+                      type="text"
+                      value={updatedFaculty.Name}
+                      onChange={(e) =>
+                        setUpdatedFaculty({
+                          ...updatedFaculty,
+                          Name: e.target.value,
+                        })
+                      }
+                      className="form-control mb-2"
+                    />
+                    <input
+                      type="email"
+                      value={updatedFaculty.Email}
+                      onChange={(e) =>
+                        setUpdatedFaculty({
+                          ...updatedFaculty,
+                          Email: e.target.value,
+                        })
+                      }
+                      className="form-control mb-2"
+                    />
+                    <button
+                      className="btn btn-success me-2"
+                      onClick={handleUpdate}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setEditingFaculty(null)}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
                     <h5 className="card-title mb-1">{fac.Name}</h5>
                     <small className="text-muted">ID: {fac.FacultyKey}</small>
                     <small className="text-muted ms-3">
                       Password: {fac.Password}
                     </small>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-envelope me-2 text-muted"></i>
-                  <a
-                    href={`mailto:${fac.Email}`}
-                    className="text-decoration-none"
-                  >
-                    {fac.Email}
-                  </a>
-                </div>
-                {fac.Department && (
-                  <div className="d-flex align-items-center">
-                    <i className="bi bi-building me-2 text-muted"></i>
-                    <span>{fac.Department}</span>
-                  </div>
+                    <p>{fac.Email}</p>
+                    <button
+                      className="btn btn-warning me-2"
+                      onClick={() => handleEdit(fac)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(fac.FacultyID)}
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
               </div>
             </div>
           </div>
         ))}
       </div>
-
-      {/* No Results Message */}
-      {filteredFaculty.length === 0 && (
-        <div className="text-center py-5">
-          <i className="bi bi-search display-1 text-muted"></i>
-          <p className="mt-3 text-muted">
-            No faculty members found matching your search.
-          </p>
-        </div>
-      )}
-
-      <style>
-        {`
-          .hover-shadow {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-          }
-          .hover-shadow:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-          }
-        `}
-      </style>
     </div>
   );
 }
