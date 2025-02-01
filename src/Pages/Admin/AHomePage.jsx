@@ -33,6 +33,13 @@ const AHomePage = () => {
       color: "warning",
       description: "View and manage database records",
     },
+    {
+      title: "Attendance",
+      icon: "calendar-check",
+      path: "/postattendance",
+      color: "success",
+      description: "View and manage database records",
+    },
   ];
 
   return (

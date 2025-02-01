@@ -27,6 +27,7 @@ import AttendanceReport from "./Pages/Parent/AttendanceReport";
 import FHomePage from "./Pages/Faculty/FHomePage";
 import Login from "./Pages/Login";
 import SchoolHomepage from "./Pages/SchoolHomePage";
+import MarksData from "./Pages/Admin/MarksData";
 
 
 
@@ -68,6 +69,7 @@ function Appcontent() {
           <Route path="/createfaculty" element={<CreateFaculty />} />
           <Route path="/postnews" element={<PostNews />} />
           <Route path="/releasemarks" element={<ReleaseMarks />} />
+          <Route path="/marksdata" element={<MarksData/>} />
         </Routes>
 
         {hidebottamnav.includes(location.pathname) ? null : <BottomNav />}

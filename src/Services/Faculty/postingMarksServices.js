@@ -7,6 +7,9 @@ const postingMarksService = {
   // Fetch classes
   getClasses: () => axios.get(`${BASE_URL}/class`),
 
+  //get all marks
+  getAllMarks: () => axios.get(`${BASE_URL}/studentmarks`),
+
   // Fetch subjects
   getSubjects: () => axios.get(`${BASE_URL}/subject`),
 
@@ -14,7 +17,8 @@ const postingMarksService = {
   getTestTypes: () => axios.get(`${BASE_URL}/testtype`),
 
   // Fetch students by class
-  getStudentsByClass: (classID) => axios.get(`${BASE_URL}/student/class/${classID}`),
+  getStudentsByClass: (classID) =>
+    axios.get(`${BASE_URL}/student/class/${classID}`),
 
   // Submit marks
   submitMarks: (marksData) => axios.post(`${BASE_URL}/studentmarks`, marksData),
