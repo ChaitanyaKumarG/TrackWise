@@ -28,6 +28,8 @@ import FHomePage from "./Pages/Faculty/FHomePage";
 import Login from "./Pages/Login";
 import SchoolHomepage from "./Pages/SchoolHomePage";
 import MarksData from "./Pages/Admin/MarksData";
+import Absentees from "./Pages/Admin/Absentees";
+import MarksGeneration from "./Pages/Admin/GenerateRanks";
 
 
 
@@ -70,6 +72,8 @@ function Appcontent() {
           <Route path="/postnews" element={<PostNews />} />
           <Route path="/releasemarks" element={<ReleaseMarks />} />
           <Route path="/marksdata" element={<MarksData/>} />
+          <Route path="/absentees" element={<Absentees/>}/>
+          <Route path="/marksgeneration" element={<MarksGeneration/>}/>
         </Routes>
 
         {hidebottamnav.includes(location.pathname) ? null : <BottomNav />}

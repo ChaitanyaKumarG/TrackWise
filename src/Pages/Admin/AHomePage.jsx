@@ -34,11 +34,25 @@ const AHomePage = () => {
       description: "View and manage database records",
     },
     {
-      title: "Attendance",
+      title: "Marks Data",
       icon: "calendar-check",
-      path: "/postattendance",
-      color: "success",
-      description: "View and manage database records",
+      path: "/marksdata",
+      color: "warning",
+      description: "View and manage Marks Data",
+    },
+    {
+      title: "Absentees",
+      icon: "calendar-check",
+      path: "/absentees",
+      color: "danger-emphasis",
+      description: "View absentees and send mails",
+    },
+    {
+      title: "Ranks Generation",
+      icon: "calendar-check",
+      path: "/marksgeneration",
+      color: "primary",
+      description: "Generate Ranks",
     },
   ];
 

@@ -3,7 +3,7 @@ import postMarksService from "../../Services/Faculty/postingMarksServices";
 import * as XLSX from "xlsx";
 import { fetchStudentDetailsbyID } from "../../Services/Parent/studentService";
 
-const MarksData = () => {
+const MarksGeneration = () => {
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [testTypes, setTestTypes] = useState([]);
@@ -12,19 +12,19 @@ const MarksData = () => {
   const [studentDetails, setStudentDetails] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-
+  const [rankings, setRankings] = useState({
+    testWise: {},
+    classWise: {},
+    overall: {},
+  });
 
   const tableRef = useRef(null);
 
   const handlePrint = () => {
     const printContents = tableRef.current.innerHTML;
-
     document.body.innerHTML = printContents;
     window.print();
-
   };
-
 
   const [filters, setFilters] = useState({
     classId: "",
@@ -34,7 +34,95 @@ const MarksData = () => {
     endDate: "",
   });
 
-  // Fetch initial data
+  // Calculate rankings for students
+  const calculateRankings = (marksData) => {
+    // Helper function to calculate rank (handling ties)
+    const assignRanks = (scores) => {
+      const sorted = [...scores].sort((a, b) => b.score - a.score);
+      let rank = 1;
+      const rankings = {};
+
+      for (let i = 0; i < sorted.length; i++) {
+        if (i > 0 && sorted[i].score < sorted[i - 1].score) {
+          rank = i + 1;
+        }
+        rankings[sorted[i].studentId] = rank;
+      }
+      return rankings;
+    };
+
+    // Test-wise rankings
+    const testWiseRanks = {};
+    marksData.forEach((mark) => {
+      if (mark.MarksObtained !== "AB") {
+        const testKey = `${mark.TestTypeID}-${mark.SubjectID}-${mark.ClassID}`;
+        if (!testWiseRanks[testKey]) {
+          testWiseRanks[testKey] = [];
+        }
+        testWiseRanks[testKey].push({
+          studentId: mark.StudentID,
+          score: Number(mark.MarksObtained),
+        });
+      }
+    });
+
+    // Class-wise rankings
+    const classWiseRanks = {};
+    Object.entries(testWiseRanks).forEach(([testKey, scores]) => {
+      const [testTypeId, , classId] = testKey.split("-");
+      const key = `${testTypeId}-${classId}`;
+      if (!classWiseRanks[key]) {
+        classWiseRanks[key] = {};
+      }
+
+      scores.forEach(({ studentId, score }) => {
+        if (!classWiseRanks[key][studentId]) {
+          classWiseRanks[key][studentId] = 0;
+        }
+        classWiseRanks[key][studentId] += score;
+      });
+    });
+
+    // Overall rankings
+    const overallScores = {};
+    marksData.forEach((mark) => {
+      if (mark.MarksObtained !== "AB") {
+        if (!overallScores[mark.StudentID]) {
+          overallScores[mark.StudentID] = 0;
+        }
+        overallScores[mark.StudentID] += Number(mark.MarksObtained);
+      }
+    });
+
+    // Convert scores to ranking format
+    const testWiseRankings = {};
+    Object.entries(testWiseRanks).forEach(([key, scores]) => {
+      testWiseRankings[key] = assignRanks(scores);
+    });
+
+    const classWiseRankings = {};
+    Object.entries(classWiseRanks).forEach(([key, scores]) => {
+      const scoresArray = Object.entries(scores).map(([studentId, score]) => ({
+        studentId,
+        score,
+      }));
+      classWiseRankings[key] = assignRanks(scoresArray);
+    });
+
+    const overallRankings = assignRanks(
+      Object.entries(overallScores).map(([studentId, score]) => ({
+        studentId,
+        score,
+      }))
+    );
+
+    setRankings({
+      testWise: testWiseRankings,
+      classWise: classWiseRankings,
+      overall: overallRankings,
+    });
+  };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -54,8 +142,8 @@ const MarksData = () => {
         const marksData = Array.isArray(marksRes.data) ? marksRes.data : [];
         setMarks(marksData);
         setFilteredMarks(marksData);
+        calculateRankings(marksData);
 
-        // Fetch student details for all students in marks
         const uniqueStudentIds = [
           ...new Set(marksData.map((mark) => mark.StudentID)),
         ];
@@ -93,7 +181,6 @@ const MarksData = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Filter marks based on selected filters
   useEffect(() => {
     if (!Array.isArray(marks)) return;
 
@@ -126,6 +213,7 @@ const MarksData = () => {
     }
 
     setFilteredMarks(filtered);
+    calculateRankings(filtered);
   }, [filters, marks]);
 
   const getClassName = (classId) => {
@@ -151,19 +239,39 @@ const MarksData = () => {
     return studentDetails[studentId]?.PENNumber || "N/A";
   };
 
+  const getRank = (mark) => {
+    if (mark.MarksObtained === "AB")
+      return { testRank: "N/A", classRank: "N/A", overallRank: "N/A" };
+
+    const testKey = `${mark.TestTypeID}-${mark.SubjectID}-${mark.ClassID}`;
+    const classKey = `${mark.TestTypeID}-${mark.ClassID}`;
+
+    return {
+      testRank: rankings.testWise[testKey]?.[mark.StudentID] || "N/A",
+      classRank: rankings.classWise[classKey]?.[mark.StudentID] || "N/A",
+      overallRank: rankings.overall[mark.StudentID] || "N/A",
+    };
+  };
+
   const downloadExcel = () => {
     if (!Array.isArray(filteredMarks) || filteredMarks.length === 0) return;
 
-    const excelData = filteredMarks.map((mark) => ({
-      Class: getClassName(mark.ClassID),
-      Subject: getSubjectName(mark.SubjectID),
-      "Test Type": getTestTypeName(mark.TestTypeID),
-      "Student Name": getStudentName(mark.StudentID),
-      "PEN Number": getPenNo(mark.StudentID),
-      "Marks Obtained": mark.MarksObtained,
-      "Date Conducted": new Date(mark.DateConducted).toLocaleDateString(),
-      Status: mark.MarksObtained === "AB" ? "Absent" : "Present",
-    }));
+    const excelData = filteredMarks.map((mark) => {
+      const ranks = getRank(mark);
+      return {
+        Class: getClassName(mark.ClassID),
+        Subject: getSubjectName(mark.SubjectID),
+        "Test Type": getTestTypeName(mark.TestTypeID),
+        "Student Name": getStudentName(mark.StudentID),
+        "PEN Number": getPenNo(mark.StudentID),
+        "Marks Obtained": mark.MarksObtained,
+        "Test Rank": ranks.testRank,
+        "Class Rank": ranks.classRank,
+        "Overall Rank": ranks.overallRank,
+        "Date Conducted": new Date(mark.DateConducted).toLocaleDateString(),
+        Status: mark.MarksObtained === "AB" ? "Absent" : "Present",
+      };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(excelData);
     const workbook = XLSX.utils.book_new();
@@ -207,11 +315,10 @@ const MarksData = () => {
         <div className="card-header bg-primary text-white py-3">
           <h4 className="mb-0 text-center">
             <i className="bi bi-table me-2"></i>
-            Student Marks Data
+            Student Marks Data with Rankings
           </h4>
         </div>
         <div className="card-body p-4">
-          {/* Filters */}
           <div className="row g-3 mb-4">
             <div className="col-md-4">
               <label className="form-label">
@@ -297,7 +404,6 @@ const MarksData = () => {
             </div>
           </div>
 
-          {/* Marks Table */}
           <div className="table-responsive" ref={tableRef}>
             <table className="table table-hover table-striped mb-0">
               <thead className="table-light sticky-top">
@@ -309,49 +415,69 @@ const MarksData = () => {
                   <th>Subject</th>
                   <th>Test Type</th>
                   <th className="text-center">Marks</th>
+                  <th className="text-center">Test Rank</th>
+                  <th className="text-center">Class Rank</th>
+                  <th className="text-center">Overall Rank</th>
                   <th>Status</th>
                   <th>Date Conducted</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredMarks.map((mark, index) => (
-                  <tr key={mark.MarkID}>
-                    <td className="text-center">{index + 1}</td>
-                    <td>{getStudentName(mark.StudentID)}</td>
-                    <td>{getPenNo(mark.StudentID)}</td>
-                    <td>{getClassName(mark.ClassID)}</td>
-                    <td>{getSubjectName(mark.SubjectID)}</td>
-                    <td>{getTestTypeName(mark.TestTypeID)}</td>
-                    <td className="text-center">
-                      <span
-                        className={`badge ${
-                          mark.MarksObtained === "AB"
-                            ? "bg-warning"
-                            : "bg-primary"
-                        }`}
-                      >
-                        {mark.MarksObtained}
-                      </span>
-                    </td>
-                    <td>
-                      <span
-                        className={`badge ${
-                          mark.MarksObtained === "AB"
-                            ? "bg-warning"
-                            : "bg-success"
-                        }`}
-                      >
-                        {mark.MarksObtained === "AB" ? "Absent" : "Present"}
-                      </span>
-                    </td>
-                    <td>{new Date(mark.DateConducted).toLocaleDateString()}</td>
-                  </tr>
-                ))}
+                {filteredMarks.map((mark, index) => {
+                  const ranks = getRank(mark);
+                  return (
+                    <tr key={mark.MarkID}>
+                      <td className="text-center">{index + 1}</td>
+                      <td>{getStudentName(mark.StudentID)}</td>
+                      <td>{getPenNo(mark.StudentID)}</td>
+                      <td>{getClassName(mark.ClassID)}</td>
+                      <td>{getSubjectName(mark.SubjectID)}</td>
+                      <td>{getTestTypeName(mark.TestTypeID)}</td>
+                      <td className="text-center">
+                        <span
+                          className={`badge ${
+                            mark.MarksObtained === "AB"
+                              ? "bg-warning"
+                              : "bg-primary"
+                          }`}
+                        >
+                          {mark.MarksObtained}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <span className="badge bg-info">{ranks.testRank}</span>
+                      </td>
+                      <td className="text-center">
+                        <span className="badge bg-success">
+                          {ranks.classRank}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <span className="badge bg-dark">
+                          {ranks.overallRank}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className={`badge ${
+                            mark.MarksObtained === "AB"
+                              ? "bg-warning"
+                              : "bg-success"
+                          }`}
+                        >
+                          {mark.MarksObtained === "AB" ? "Absent" : "Present"}
+                        </span>
+                      </td>
+                      <td>
+                        {new Date(mark.DateConducted).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
-          {/* Download Button */}
           <div className="mt-4">
             <button
               className="btn btn-primary btn-lg m-1"
@@ -367,6 +493,7 @@ const MarksData = () => {
               onClick={handlePrint}
               disabled={filteredMarks.length === 0}
             >
+              <i className="bi bi-printer me-2"></i>
               Print
             </button>
 
@@ -380,4 +507,4 @@ const MarksData = () => {
   );
 };
 
-export default MarksData;
+export default MarksGeneration;

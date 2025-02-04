@@ -19,7 +19,7 @@ const postingMarksService = {
   // Fetch students by class
   getStudentsByClass: (classID) =>
     axios.get(`${BASE_URL}/student/class/${classID}`),
-
+    
   // Submit marks
   submitMarks: (marksData) => axios.post(`${BASE_URL}/studentmarks`, marksData),
 };
