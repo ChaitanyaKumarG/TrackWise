@@ -39,6 +39,7 @@ const Homepage = () => {
 
   return (
     <div className="homepage-wrapper min-vh-100">
+
       <div className="container py-4 main-content">
         <div className="greeting-section mb-4">
           <h1 className="display-5 fw-bold greeting-text">
@@ -85,11 +86,20 @@ const Homepage = () => {
         </div>
       </div>
 
+
       <style jsx>{`
         .homepage-wrapper {
           background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
           padding-top: 60px;
           padding-bottom: 70px;
+        }
+
+        .main-content {
+          margin-bottom: 70px;
+        }
+
+        .greeting-section {
+          padding: 1rem 0;
         }
 
         .greeting-text {
@@ -128,71 +138,23 @@ const Homepage = () => {
           box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1);
         }
 
-        /* Clean Mobile Dark Theme */
         @media (max-width: 768px) {
-          .homepage-wrapper {
-            background: rgb(8, 8, 8);
-          }
-
           .greeting-text {
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
             font-size: 2rem;
-            background: linear-gradient(45deg, #fff, #8a2be2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-          }
-
-          .cursor {
-            background-color: #8a2be2;
-            box-shadow: 0 0 10px #8a2be2;
           }
 
           .news-grid {
             grid-template-columns: 1fr;
           }
 
-          .card {
-            background-color: rgb(22, 21, 21) !important;
-            border: none !important;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-          }
-
           .card-body {
-            padding: 1.25rem;
-          }
-
-          .card-title {
-            color: #ffffff !important;
-            font-weight: 600;
-          }
-
-          .card-text {
-            color: #cccccc !important;
+            padding: 1rem;
           }
 
           .icon-circle {
-            width: 44px;
-            height: 44px;
-            font-size: 1.1rem;
-            background: linear-gradient(135deg, #8a2be2 0%, #4a148c 100%);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-          }
-
-          .hover-card {
-            transition: transform 0.2s ease;
-          }
-
-          .hover-card:active {
-            transform: scale(0.98);
-          }
-
-          .text-muted {
-            color: #a0a0a0 !important;
-          }
-
-          .spinner-border {
-            color: #8a2be2 !important;
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
           }
         }
 
